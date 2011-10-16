@@ -26,20 +26,20 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<term-ansicolor>, [">= 0"])
-      s.add_runtime_dependency(%q<sinatra>, ["~> 1.2.6"])
+      s.add_runtime_dependency(%q<sinatra>, [">= 0"])
       s.add_runtime_dependency(%q<sinatra-advanced-routes>, [">= 0"])    
       s.add_runtime_dependency(%q<rack>, [">= 0"])
       s.add_runtime_dependency(%q<rack-test>, [">= 0"])
     else
       s.add_dependency(%q<term-ansicolor>, [">= 0"])
-      s.add_dependency(%q<sinatra>, ["~> 1.2.6"])
+      s.add_dependency(%q<sinatra>, [">= 0"])
       s.add_dependency(%q<sinatra-advanced-routes>, [">= 0"])    
       s.add_dependency(%q<rack>, [">= 0"])
       s.add_dependency(%q<rack-test>, [">= 0"])
     end
   else
     s.add_dependency(%q<term-ansicolor>, [">= 0"])
-    s.add_dependency(%q<sinatra>, ["~> 1.2.6"])
+    s.add_dependency(%q<sinatra>, [">= 0"])
     s.add_dependency(%q<sinatra-advanced-routes>, [">= 0"])    
     s.add_dependency(%q<rack>, [">= 0"])
     s.add_dependency(%q<rack-test>, [">= 0"])
