@@ -1,3 +1,0 @@
-export your sinatra app to static files
-
-get requests only, currently no redirects allowed
