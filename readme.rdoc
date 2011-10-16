@@ -1,6 +1,6 @@
 = sinatra-static
 
-export your sinatra app to static files - get requests only, currently no redirects allowed
+export your sinatra app to static files - get requests and status 200 only (no redirects)
 
 
 == usage
