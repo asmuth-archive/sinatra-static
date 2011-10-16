@@ -1,5 +1,7 @@
 class SinatraStatic
 
+  @@file_extensions = %w(css js xml)
+
   attr_accessor :app
 
   include Rack::Test::Methods
@@ -42,20 +44,30 @@ private
   end
 
   def file_for_path(path, dir)
-    ::File.join(dir_for_path(path, dir), 'index.html')
-  end
-
-  def dir_for_path(path, dir)
-    ::File.join(dir, path)
+    if path.match(/[^\/\.]+.(#{file_extensions.join("|")})$/)
+      dir_for_path(path, dir)
+    else
+      ::File.join(dir_for_path(path, dir), 'index.html')
+    end
   end
 
   def dir_exists?(dir)
     ::File.exists?(dir) && ::File.directory?(dir)
   end
 
-  def handle_error!(desc)    
-    puts ColorString.new("failed: #{desc}").red; exit!
+  def dir_for_path(path, dir)   
+    ::File.join(dir, path)    
   end
+
+  # re-define ("monkeypatch") these methods at runtime to control build behaviour
+
+  def file_extensions
+    @@file_extensions
+  end
+
+  def env
+    ENV['RACK_ENV']
+  end  
 
   # re-define ("monkeypatch") these methods at runtime to control error behaviour
 
@@ -71,8 +83,8 @@ private
     handle_error!("GET #{route.path} returned non-200 status code...")
   end
 
-  def env
-    ENV['RACK_ENV']
-  end  
-  
+  def handle_error!(desc)    
+    puts ColorString.new("failed: #{desc}").red; exit!
+  end
+
 end
