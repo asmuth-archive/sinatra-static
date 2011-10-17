@@ -45,9 +45,9 @@ private
 
   def file_for_path(path, dir)
     if path.match(/[^\/\.]+.(#{file_extensions.join("|")})$/)
-      dir_for_path(path, dir)
+      ::File.join(dir, path)
     else
-      ::File.join(dir_for_path(path, dir), 'index.html')
+      ::File.join(dir, path, 'index.html')
     end
   end
 
@@ -56,7 +56,7 @@ private
   end
 
   def dir_for_path(path, dir)   
-    ::File.join(dir, path)    
+    file_for_path(path, dir).match(/(.*)\/[^\/]+$/)[1]  
   end
 
   # re-define ("monkeypatch") these methods at runtime to control build behaviour
