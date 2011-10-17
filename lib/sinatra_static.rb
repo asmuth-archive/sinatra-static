@@ -1,6 +1,6 @@
 class SinatraStatic
 
-  @@file_extensions = %w(css js xml)
+  @@file_extensions = %w(css js xml json html)
 
   attr_accessor :app
 

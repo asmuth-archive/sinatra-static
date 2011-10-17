@@ -28,6 +28,10 @@ this simple app:
     get '/blog' do
       "blog index"
     end
+    
+    get '/blog/ajax.html' do
+      "blog index w/o layout"
+    end
 
     %w(page1 page2 page3).each do |page|
       get "/blog/#{page}" do
@@ -37,6 +41,10 @@ this simple app:
 
     get '/dynamic.js' do
       "my generated javascript"
+    end
+
+    get '/data.json' do
+      "my generated json"
     end
 
   end
@@ -49,7 +57,9 @@ will generate this output:
 
   ~/my_static_site/index.html              -> "my homepage"
   ~/my_static_site/blog/index.html         -> "blog index"
+  ~/my_static_site/blog/ajax.html          -> "blog index w/o layout"
   ~/my_static_site/blog/page1/index.html   -> "blog page: page1"
   ~/my_static_site/blog/page2/index.html   -> "blog page: page2"
   ~/my_static_site/blog/page3/index.html   -> "blog page: page3"
   ~/my_static_site/dynamic.js              -> "my generated javascript"
+  ~/my_static_site/data.json               -> "my generated json"
