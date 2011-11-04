@@ -59,8 +59,6 @@ private
     file_for_path(path, dir).match(/(.*)\/[^\/]+$/)[1]  
   end
 
-  # re-define ("monkeypatch") these methods at runtime to control build behaviour
-
   def file_extensions
     @@file_extensions
   end
@@ -68,8 +66,6 @@ private
   def env
     ENV['RACK_ENV']
   end  
-
-  # re-define ("monkeypatch") these methods at runtime to control error behaviour
 
   def handle_error_no_each_route!
     handle_error!("can't call app.each_route, did you include sinatra-advanced-routes?")
