@@ -39,7 +39,7 @@ private
 
   def get_path(path)
     self.get(path).tap do |resp|      
-      handle_error_non_200(route) unless resp.status == 200           
+      handle_error_non_200!(path) unless resp.status == 200           
     end
   end
 
@@ -75,8 +75,8 @@ private
     handle_error!("can't find output directory: #{dir}")
   end
 
-  def handle_error_non_200!(route)
-    handle_error!("GET #{route.path} returned non-200 status code...")
+  def handle_error_non_200!(path)
+    handle_error!("GET #{path} returned non-200 status code...")
   end
 
   def handle_error!(desc)    

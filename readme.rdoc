@@ -63,3 +63,12 @@ will generate this output:
   ~/my_static_site/blog/page3/index.html   -> "blog page: page3"
   ~/my_static_site/dynamic.js              -> "my generated javascript"
   ~/my_static_site/data.json               -> "my generated json"
+
+
+= installation
+
+  gem install sinatra-static
+
+or in your Gemfile
+
+  gem 'sinatra-static', '>= 0.1.1'

@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "sinatra-static"
-  s.version = "0.1.0"
+  s.version = "0.1.1"
   
   s.authors = ["Paul Asmuth"]
   s.date = "2011-10-16"
