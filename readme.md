@@ -1,8 +1,8 @@
 # sinatra-static
 
-> Exports your Sinatra app to static files. 
-Requires "sinatra-advanced-routes". 
-Get requests and response-status 200 only (no redirects). you also have to copy the public-dir yourself (if you're using it).
+> Exports your Sinatra app to static files. Get requests and response-status 200 only (no redirects).
+
+Depends on [sinatra-advanced-routes](https://github.com/rkh/sinatra-advanced-routes)
 
 ## Installation
 
@@ -12,35 +12,39 @@ Add `sinatra-static` to your Gemfile
 
 ## Usage
 
-    builder = SinatraStatic.new(App)
-    builder.build!('public/')
+```ruby
+builder = SinatraStatic.new(App)
+builder.build!('public/')
+```
 
 ## Getting started
 
-Sample Sinatra application :
+Sample Sinatra application building static pages :
 
-    require 'sinatra'
-    require 'sinatra/advanced_routes'
-    require 'sinatra_static'
+```ruby
+require 'sinatra'
+require 'sinatra/advanced_routes'
+require 'sinatra_static'
 
-    class App < Sinatra::Base
+class App < Sinatra::Base
 
-        register Sinatra::AdvancedRoutes
+    register Sinatra::AdvancedRoutes
 
-        get '/' do    
-          "homepage"
-        end
-
-        get '/contact' do
-          "contact"
-        end
-
+    get '/' do    
+      "homepage"
     end
 
-    builder = SinatraStatic.new(App)
-    builder.build!('public/')
+    get '/contact' do
+      "contact"
+    end
 
-Will generate this output when run :
+end
+
+builder = SinatraStatic.new(App)
+builder.build!('public/')
+```
+
+Running your app ex. `ruby app.rb` will automatically generate theses files :
 
     public/index.html              -> "homepage"
     public/contact/index.html      -> "contact"
