@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
     "Gemfile.lock",
     "sinatra-static.gemspec",
     "lib/sinatra_static.rb",
-    "readme.rdoc"
+    "readme.md"
   ]
   s.homepage = "http://github.com/paulasmuth/sinatra-static"
   s.licenses = ["MIT"]
