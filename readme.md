@@ -1,12 +1,10 @@
 # sinatra-static
 
-> Exports your Sinatra app to static files. Get requests and response-status 200 only (no redirects).
-
-Depends on [sinatra-advanced-routes](https://github.com/rkh/sinatra-advanced-routes)
+> Exports your Sinatra app to static files. Depends on [sinatra-advanced-routes](https://github.com/rkh/sinatra-advanced-routes).
 
 ## Installation
 
-Add `sinatra-static` to your Gemfile
+Add `sinatra-static` to your Gemfile :
 
     gem 'sinatra-static', '>= 0.1.1'
 
@@ -31,11 +29,15 @@ class App < Sinatra::Base
     register Sinatra::AdvancedRoutes
 
     get '/' do    
-      "homepage"
+        "homepage"
     end
 
     get '/contact' do
-      "contact"
+        "contact"
+    end
+
+    get '/data.json' do
+        "{json: 1}"
     end
 
 end
@@ -48,11 +50,12 @@ Running your app ex. `ruby app.rb` will automatically generate theses files :
 
     public/index.html              -> "homepage"
     public/contact/index.html      -> "contact"
+    public/data.json               -> "{json: 1}"
 
-## Advanced assets management
+### Advanced assets management
 
 If you wish to generate your assets (CSS, JS, images) with an assets packaging system,
 you may use [Sinatra-AssetPack](https://github.com/rstacruz/sinatra-assetpack) and build
-your assets in the same target directory with `rake assetpack:build`.
+your assets in the same target directory with `rake assetpack:build` task.
 
-IMPORTANT : to achieve `Sinatra-AssetPack` and `Sinatra-Static` compatibility, see [pull request #1](https://github.com/paulasmuth/sinatra-static/pull/1)
+IMPORTANT : to achieve `Sinatra-AssetPack` and `Sinatra-Static` compatibility, see [pull request #1](https://github.com/paulasmuth/sinatra-static/pull/1).
