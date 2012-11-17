@@ -48,3 +48,11 @@ Running your app ex. `ruby app.rb` will automatically generate theses files :
 
     public/index.html              -> "homepage"
     public/contact/index.html      -> "contact"
+
+## Advanced assets management
+
+If you wish to generate your assets (CSS, JS, images) with an assets packaging system,
+you may use [Sinatra-AssetPack](https://github.com/rstacruz/sinatra-assetpack) and build
+your assets in the same target directory with `rake assetpack:build`.
+
+IMPORTANT : to achieve `Sinatra-AssetPack` and `Sinatra-Static` compatibility, see [pull request #1](https://github.com/paulasmuth/sinatra-static/pull/1)
