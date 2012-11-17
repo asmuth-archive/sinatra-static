@@ -25,6 +25,8 @@ Sample Sinatra application :
 
     class App < Sinatra::Base
 
+        register Sinatra::AdvancedRoutes
+
         get '/' do    
           "homepage"
         end
