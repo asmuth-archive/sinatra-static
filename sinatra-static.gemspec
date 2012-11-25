@@ -24,5 +24,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'rack'
   s.add_development_dependency 'rack-test'
   s.add_development_dependency 'rake'
+  s.add_development_dependency 'awesome_print'
 end
 

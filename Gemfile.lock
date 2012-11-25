@@ -3,7 +3,6 @@ PATH
   specs:
     sinatra-static (0.1.1)
       rack
-      rack-test
       sinatra
       sinatra-advanced-routes
       term-ansicolor
@@ -11,6 +10,7 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
+    awesome_print (1.1.0)
     backports (2.6.5)
     monkey-lib (0.5.4)
       backports
@@ -38,5 +38,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  awesome_print
+  rack-test
   rake
   sinatra-static!
