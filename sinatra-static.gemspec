@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'sinatra'
   s.add_runtime_dependency 'sinatra-advanced-routes'
   s.add_runtime_dependency 'rack'
-  s.add_runtime_dependency 'rack-test'
+  s.add_development_dependency 'rack-test'
+  s.add_development_dependency 'rake'
 end
 
