@@ -10,9 +10,6 @@ class SinatraStaticBuildTest < UnitTest
     get '/contact' do
       "contact"
     end
-    get '/data.json' do
-      "{test: 'ok'}"
-    end
   end
 
   def test_build
@@ -26,7 +23,6 @@ class SinatraStaticBuildTest < UnitTest
 
     assert File.read(File.join(App.root, 'public/index.html')).include?('homepage')
     assert File.read(File.join(App.root, 'public/contact/index.html')).include?('contact')
-    assert File.read(File.join(App.root, 'public/data.json')).include?("{test: 'ok'}")
   end
 
 end

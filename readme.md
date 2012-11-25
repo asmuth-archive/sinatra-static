@@ -36,10 +36,6 @@ class App < Sinatra::Base
         "contact"
     end
 
-    get '/data.json' do
-        "{json: 1}"
-    end
-
 end
 
 builder = SinatraStatic.new(App)
@@ -50,7 +46,6 @@ Running your app ex. `ruby app.rb` will automatically generate theses files :
 
     public/index.html              -> "homepage"
     public/contact/index.html      -> "contact"
-    public/data.json               -> "{json: 1}"
 
 ### Advanced assets management
 
