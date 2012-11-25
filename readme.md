@@ -54,5 +54,3 @@ Running your app ex. `ruby app.rb` will automatically generate theses files :
 If you wish to generate your assets (CSS, JS, images) with an assets packaging system,
 you may use [Sinatra-AssetPack](https://github.com/rstacruz/sinatra-assetpack) and build
 your assets in the same target directory with `rake assetpack:build` task.
-
-IMPORTANT : to achieve `Sinatra-AssetPack` and `Sinatra-Static` compatibility, see [pull request #1](https://github.com/paulasmuth/sinatra-static/pull/1).
