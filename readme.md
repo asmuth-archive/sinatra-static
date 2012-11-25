@@ -2,6 +2,8 @@
 
 > Exports your Sinatra app to static files. Depends on [sinatra-advanced-routes](https://github.com/rkh/sinatra-advanced-routes).
 
+[![Build Status](https://travis-ci.org/hooktstudios/sinatra-static.png)](https://travis-ci.org/hooktstudios/sinatra-static)
+
 ## Installation
 
 Add `sinatra-static` to your Gemfile :
