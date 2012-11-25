@@ -8,7 +8,9 @@
 
 Add `sinatra-static` to your Gemfile :
 
-    gem 'sinatra-static', '>= 0.1.1'
+```ruby
+gem 'sinatra-static', :require => 'sinatra_static'
+```
 
 ## Usage
 
