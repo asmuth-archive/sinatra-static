@@ -2,8 +2,8 @@
 
 > Exports your Sinatra app to static files. Depends on [sinatra-advanced-routes](https://github.com/rkh/sinatra-advanced-routes).
 
-[![Build Status](https://travis-ci.org/hooktstudios/sinatra-static.png)](https://travis-ci.org/hooktstudios/sinatra-static)
-[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/hooktstudios/sinatra-static)
+[![Build Status](https://travis-ci.org/hooktstudios/sinatra-export.png)](https://travis-ci.org/hooktstudios/sinatra-export)
+[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/hooktstudios/sinatra-export)
 
 ## Installation
 
