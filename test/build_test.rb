@@ -14,15 +14,15 @@ class SinatraExportBuildTest < UnitTest
 
   def test_build
     # Temporary public folder
-    public_path = File.join(App.root, 'public')
-    FileUtils.rm_rf File.join(App.root, 'public')
-    FileUtils.mkdir public_path
+    public_folder = App.public_folder
+    FileUtils.rm_rf public_folder
+    FileUtils.mkdir public_folder
 
     builder = Sinatra::Export.new(App)
-    builder.build!(public_path)
+    builder.build!
 
-    assert File.read(File.join(App.root, 'public/index.html')).include?('homepage')
-    assert File.read(File.join(App.root, 'public/contact/index.html')).include?('contact')
+    assert File.read(File.join(public_folder, 'index.html')).include?('homepage')
+    assert File.read(File.join(public_folder, 'contact/index.html')).include?('contact')
   end
 
 end

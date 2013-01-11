@@ -18,7 +18,6 @@ Setup your `Rakefile` :
 ```
 APP_FILE  = 'app.rb'
 APP_CLASS = 'App'
-APP_PUBLIC = 'public'
 
 require 'sinatra/export/rake'
 ```
@@ -55,6 +54,10 @@ Running your app ex. `rake sinatra:export` will automatically generate theses fi
 ## Usage
 
     rake sinatra:export
+
+Or invoke it manually :
+
+    Sinatra::Export.new(App).build!
 
 ### Advanced Assets Management
 

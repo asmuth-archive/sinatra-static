@@ -8,7 +8,6 @@ unless defined?(APP_FILE) && defined?(APP_CLASS)
   $stderr.write "Example:\n"
   $stderr.write "    APP_FILE  = 'app.rb'\n"
   $stderr.write "    APP_CLASS = 'App'\n"
-  $stderr.write "    APP_PUBLIC = 'public'\n"
   $stderr.write "    require 'sinatra/export/rake'\n"
   $stderr.write "\n"
   exit
@@ -29,7 +28,6 @@ namespace :sinatra do
   desc "Export static application"
   task :export do
     require 'sinatra/export'
-    builder = Sinatra::Export.new(app)
-    builder.build!(APP_PUBLIC)
+    Sinatra::Export.new(app).build!
   end
 end

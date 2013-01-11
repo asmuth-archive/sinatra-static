@@ -18,7 +18,8 @@ module Sinatra
       @app = app
     end
 
-    def build!(dir)
+    def build!
+      dir = @app.public_folder
       handle_error_no_each_route! unless @app.respond_to?(:each_route)
       handle_error_dir_not_found!(dir) unless dir_exists?(dir)
       build_routes(dir)
