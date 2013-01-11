@@ -1,3 +1,5 @@
+require 'rack/test'
+
 module Sinatra
   class Export
 

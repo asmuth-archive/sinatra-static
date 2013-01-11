@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
     'Gemfile.lock',
     'sinatra-export.gemspec',
     'lib/sinatra/export.rb',
+    'lib/sinatra/export/rake.rb',
     'readme.md'
   ]
   s.homepage = 'http://github.com/hooktstudios/sinatra-export'

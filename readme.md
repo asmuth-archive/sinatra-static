@@ -7,20 +7,23 @@
 
 ## Installation
 
-Add to your Gemfile :
+Add to your `Gemfile` :
 
 ```ruby
 gem 'sinatra-export'
 ```
 
-## Usage
+Setup your `Rakefile` :
 
-```ruby
-builder = Sinatra::Export.new(App)
-builder.build!('public/')
+```
+APP_FILE  = 'app.rb'
+APP_CLASS = 'App'
+APP_PUBLIC = 'public'
+
+require 'sinatra/export/rake'
 ```
 
-## Getting started
+## Quick Start
 
 Sample Sinatra application building static pages :
 
@@ -34,25 +37,26 @@ class App < Sinatra::Base
     register Sinatra::AdvancedRoutes
 
     get '/' do    
-        "homepage"
+        "<h1>My homepage</h1>"
     end
 
     get '/contact' do
-        "contact"
+        "<h1>My contact page<h1>"
     end
 
 end
-
-builder = Sinatra::Export.new(App)
-builder.build!('public/')
 ```
 
-Running your app ex. `ruby app.rb` will automatically generate theses files :
+Running your app ex. `rake sinatra:export` will automatically generate theses files :
 
-    public/index.html              -> "homepage"
-    public/contact/index.html      -> "contact"
+    public/index.html              -> "<h1>My homepage</h1>"
+    public/contact/index.html      -> "<h1>My contact page<h1>"
 
-### Advanced assets management
+## Usage
+
+    rake sinatra:export
+
+### Advanced Assets Management
 
 If you wish to generate your assets (CSS, JS, images) with an assets packaging system,
 you may use [Sinatra-AssetPack](https://github.com/rstacruz/sinatra-assetpack) and build
