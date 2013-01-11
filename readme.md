@@ -27,7 +27,7 @@ Sample Sinatra application building static pages :
 ```ruby
 require 'sinatra'
 require 'sinatra/advanced_routes'
-require 'sinatra_static'
+require 'sinatra/export'
 
 class App < Sinatra::Base
 
