@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   
   s.authors = ['Jean-Philippe Doyle', 'Paul Asmuth']
   s.date = '2013-01-16'
-  s.description = 'Export your sinatra app to a directory of static files.'
+  s.description = 'Exports all your Sinatra application routes to static files in your public folder'
   s.summary = 'Sinatra static export.'
   s.email = 'jeanphilippe.doyle@hooktstudios.com'
   s.files = [
