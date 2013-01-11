@@ -1,6 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 
-class SinatraStaticBuildTest < UnitTest
+class SinatraExportBuildTest < UnitTest
   include Rack::Test::Methods
 
   class App < UnitTest::App
@@ -18,7 +18,7 @@ class SinatraStaticBuildTest < UnitTest
     FileUtils.rm_rf File.join(App.root, 'public')
     FileUtils.mkdir public_path
 
-    builder = SinatraStatic.new(App)
+    builder = Sinatra::Export.new(App)
     builder.build!(public_path)
 
     assert File.read(File.join(App.root, 'public/index.html')).include?('homepage')

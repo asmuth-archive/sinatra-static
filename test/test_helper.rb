@@ -1,7 +1,7 @@
 require 'rack/test'
 require 'test/unit'
 require 'sinatra/advanced_routes'
-require 'sinatra_static'
+require 'sinatra/export'
 require 'awesome_print'
 
 # Helper based on sinatra-assetpack test helper

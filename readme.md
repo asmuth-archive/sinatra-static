@@ -1,4 +1,4 @@
-# sinatra-static
+# sinatra-export
 
 > Exports your Sinatra app to static files. Depends on [sinatra-advanced-routes](https://github.com/rkh/sinatra-advanced-routes).
 
@@ -7,16 +7,16 @@
 
 ## Installation
 
-Add `sinatra-static` to your Gemfile :
+Add to your Gemfile :
 
 ```ruby
-gem 'sinatra-static', :require => 'sinatra_static'
+gem 'sinatra-export'
 ```
 
 ## Usage
 
 ```ruby
-builder = SinatraStatic.new(App)
+builder = Sinatra::Export.new(App)
 builder.build!('public/')
 ```
 
@@ -43,7 +43,7 @@ class App < Sinatra::Base
 
 end
 
-builder = SinatraStatic.new(App)
+builder = Sinatra::Export.new(App)
 builder.build!('public/')
 ```
 
