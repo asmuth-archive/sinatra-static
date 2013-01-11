@@ -1,0 +1,3 @@
+New In 0.9.1
+
+* API CHANGE: Now calling .build! without path parameter, using Sinatra application :public_folder setting.
