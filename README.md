@@ -49,6 +49,10 @@ class App < Sinatra::Base
         "<h1>My contact page<h1>"
     end
 
+    get '/data.json' do
+      "{test: 'ok'}"
+    end
+
 end
 ```
 
@@ -56,6 +60,7 @@ Running your app ex. `rake sinatra:export` will automatically generate theses fi
 
     public/index.html              -> "<h1>My homepage</h1>"
     public/contact/index.html      -> "<h1>My contact page<h1>"
+    public/data.json               -> "{test: 'ok'}"
 
 ## Usage
 
