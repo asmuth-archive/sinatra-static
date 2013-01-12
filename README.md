@@ -61,11 +61,13 @@ Running your app ex. `rake sinatra:export` will automatically generate theses fi
 
 ## Usage
 
-    rake sinatra:export
+    $ rake sinatra:export
 
 Or invoke it manually :
 
-    Sinatra::Export.new(App).build!
+````ruby
+Sinatra::Export.new(App).build!
+```
 
 ### Advanced Assets Management
 
