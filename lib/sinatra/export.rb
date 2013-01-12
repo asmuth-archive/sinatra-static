@@ -35,9 +35,10 @@ module Sinatra
     end
 
     def build_path(path, dir)
+      body = get_path(path).body
       ::FileUtils.mkdir_p(dir_for_path(path, dir))
       ::File.open(file_for_path(path, dir), 'w+') do |f|
-        f.write(get_path(path).body)
+        f.write(body)
       end
     end
 
