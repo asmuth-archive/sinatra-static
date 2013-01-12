@@ -1,4 +1,5 @@
 require 'rack/test'
+require 'term/ansicolor'
 
 module Sinatra
   class Export
@@ -9,7 +10,7 @@ module Sinatra
 
     include Rack::Test::Methods
 
-    require 'term/ansicolor'
+
     class ColorString < String
       include Term::ANSIColor
     end
