@@ -11,8 +11,6 @@ Add to your `Gemfile` :
 
 ```ruby
 gem 'sinatra-export'
-# required Sinatra Extension for sinatra-export
-gem 'sinatra-advanced-routes'
 ```
 
 Setup your application with [sinatra-advanced-routes](https://github.com/rkh/sinatra-advanced-routes) :
