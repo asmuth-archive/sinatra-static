@@ -74,9 +74,9 @@ Sinatra::Export.new(App).build!
 
 ### Assets management and more
 
-If you wish to generate your assets (CSS, JS, images) with an assets packaging system,
-you may use [Sinatra-AssetPack](https://github.com/hooktstudios/sinatra-assetpack) and build
-your assets in the same target directory with `rake assetpack:build` task.
+If you wish to generate your assets (css, images, etc) with a packaging system,
+you may use [Sinatra-AssetPack](https://github.com/hooktstudios/sinatra-assetpack)
+and build your assets in the same target directory with `rake assetpack:build` task.
 
 You may also have a look at [sinatra-static-bp](https://github.com/hooktstudios/sinatra-static-bp)
 boilerplate to setup a simple exportable Sinatra app, using both gems.
