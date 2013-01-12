@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'sinatra-export'
-  s.version = '0.9.1'
+  s.version = '0.9.2'
   
   s.authors = ['Jean-Philippe Doyle', 'Paul Asmuth']
   s.date = '2013-01-16'
@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
     'sinatra-export.gemspec',
     'lib/sinatra/export.rb',
     'lib/sinatra/export/rake.rb',
-    'readme.md'
+    'README.md'
   ]
   s.homepage = 'http://github.com/hooktstudios/sinatra-export'
   s.license = 'MIT'
