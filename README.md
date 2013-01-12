@@ -13,7 +13,7 @@ Add to your `Gemfile` :
 gem 'sinatra-export'
 ```
 
-Setup your application with [sinatra-advanced-routes](https://github.com/rkh/sinatra-advanced-routes) :
+Setup your application with [sinatra-advanced-routes](https://github.com/hooktstudios/sinatra-advanced-routes) :
 
 ```ruby
 register Sinatra::AdvancedRoutes
@@ -72,8 +72,11 @@ Or invoke it manually :
 Sinatra::Export.new(App).build!
 ```
 
-### Advanced Assets Management
+### Assets management and more
 
 If you wish to generate your assets (CSS, JS, images) with an assets packaging system,
-you may use [Sinatra-AssetPack](https://github.com/rstacruz/sinatra-assetpack) and build
+you may use [Sinatra-AssetPack](https://github.com/hooktstudios/sinatra-assetpack) and build
 your assets in the same target directory with `rake assetpack:build` task.
+
+You may also have a look at [sinatra-static-bp](https://github.com/hooktstudios/sinatra-static-bp)
+boilerplate to setup a simple exportable Sinatra app, using both gems.
