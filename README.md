@@ -3,6 +3,7 @@
 > Exports all your Sinatra application routes to static files in your public folder.
 
 [![Build Status](https://travis-ci.org/hooktstudios/sinatra-export.png)](https://travis-ci.org/hooktstudios/sinatra-export)
+[![Dependency Status](https://gemnasium.com/hooktstudios/sinatra-export.png)](https://gemnasium.com/hooktstudios/sinatra-export)
 [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/hooktstudios/sinatra-export)
 
 ## Installation
