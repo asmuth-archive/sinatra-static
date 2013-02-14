@@ -82,12 +82,7 @@ Sinatra::Export.new(App).build!
 
 ## Contributing
 
-Guidelines to contributions :
-
-1. Use [GitHub Issue](http://github.com/thoughtbot/hooktstudios/sinatra-export).
-2. Run the tests.
-
-See `CONTRIBUTING.md` for more details on contributing and running test.
+See [CONTRIBUTING.md](https://github.com/hooktstudios/sinatra-export/blob/master/CONTRIBUTING.md) for more details on contributing and running test.
 
 ## Credits
 
