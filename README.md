@@ -88,4 +88,4 @@ See [CONTRIBUTING.md](https://github.com/hooktstudios/sinatra-export/blob/master
 
 ![hooktstudios](http://hooktstudios.com/logo.png)
 
-[sinatra-export](https://rubygems.org/gems/sinatra-export) is maintained and funded by [hooktstudios](http://hooktstudios.com)
+[sinatra-export](https://rubygems.org/gems/sinatra-export) is maintained and funded by [hooktstudios](https://github.com/hooktstudios)
