@@ -82,3 +82,9 @@ and build your assets in the same target directory with `rake assetpack:build` t
 
 You may also have a look at [sinatra-static-bp](https://github.com/hooktstudios/sinatra-static-bp)
 boilerplate to setup a simple exportable Sinatra app, using both gems.
+
+## Credits
+
+![hooktstudios](http://hooktstudios.com/logo.png)
+
+[sinatra-export](https://rubygems.org/gems/sinatra-export) is maintained and funded by [hooktstudios](http://hooktstudios.com)
