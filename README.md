@@ -68,20 +68,17 @@ Running your app ex. `rake sinatra:export` will automatically generate theses fi
 
     $ rake sinatra:export
 
-Or invoke it manually :
+Or invoke it manually within ruby code :
 
 ````ruby
 Sinatra::Export.new(App).build!
 ```
 
-### Assets management and more
+## Other resources
 
-If you wish to generate your assets (css, images, etc) with a packaging system,
-you may use [Sinatra-AssetPack](https://github.com/hooktstudios/sinatra-assetpack)
-and build your assets in the same target directory with `rake assetpack:build` task.
-
-You may also have a look at [sinatra-static-bp](https://github.com/hooktstudios/sinatra-static-bp)
-boilerplate to setup a simple exportable Sinatra app, using both gems.
+* [capistrano-s3](http://github.com/hooktstudios/capistrano-s3) : build and deploy a static website to Amazon S3
+* [sinatra-assetpack](https://github.com/rstacruz/sinatra-assetpack) : package your assets transparently in Sinatra
+* [sinatra-static-bp](https://github.com/hooktstudios/sinatra-static-bp) : boilerplate to setup complete static website
 
 ## Credits
 
