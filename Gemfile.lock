@@ -14,7 +14,7 @@ GEM
     backports (2.7.1)
     monkey-lib (0.5.4)
       backports
-    rack (1.5.0)
+    rack (1.5.2)
     rack-protection (1.3.2)
       rack
     rack-test (0.6.2)
