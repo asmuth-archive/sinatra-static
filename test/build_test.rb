@@ -14,7 +14,7 @@ class SinatraExportBuildTest < UnitTest
       "{test: 'ok'}"
     end
     get '/yesterday' do
-      last_modified Time.new(2002, 10, 31)
+      last_modified Time.local(2002, 10, 31)
       "old content"
     end
   end
@@ -32,7 +32,7 @@ class SinatraExportBuildTest < UnitTest
     assert File.read(File.join(public_folder, 'contact/index.html')).include?('contact')
     assert File.read(File.join(public_folder, 'data.json')).include?("{test: 'ok'}")
 
-    assert File.mtime(File.join(public_folder, 'yesterday/index.html')) == Time.new(2002, 10, 31)
+    assert File.mtime(File.join(public_folder, 'yesterday/index.html')) == Time.local(2002, 10, 31)
   end
 
 end
