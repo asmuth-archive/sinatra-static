@@ -1,7 +1,7 @@
 source :rubygems
 
 group :development do
-  gem 'debugger'
+  gem 'debugger' unless RUBY_VERSION < '1.9'
   gem 'awesome_print'
 end
 
