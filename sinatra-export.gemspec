@@ -13,7 +13,8 @@ Gem::Specification.new do |s|
     'sinatra-export.gemspec',
     'lib/sinatra/export.rb',
     'lib/sinatra/export/rake.rb',
-    'README.md'
+    'README.md',
+    'LICENSE'
   ]
   s.homepage = 'http://github.com/hooktstudios/sinatra-export'
   s.license = 'MIT'
