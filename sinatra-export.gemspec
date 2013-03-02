@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'sinatra-export'
-  s.version = '0.9.2'
+  s.version = '0.9.3'
   
   s.authors = ['Jean-Philippe Doyle', 'Paul Asmuth']
   s.date = '2013-01-16'
