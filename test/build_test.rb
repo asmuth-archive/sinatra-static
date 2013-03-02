@@ -13,6 +13,10 @@ class SinatraExportBuildTest < UnitTest
     get '/data.json' do
       "{test: 'ok'}"
     end
+    get '/yesterday' do
+      last_modified Time.new(2002, 10, 31)
+      "old content"
+    end
   end
 
   def test_build
@@ -26,7 +30,9 @@ class SinatraExportBuildTest < UnitTest
 
     assert File.read(File.join(public_folder, 'index.html')).include?('homepage')
     assert File.read(File.join(public_folder, 'contact/index.html')).include?('contact')
-    assert File.read(File.join(App.root, 'public/data.json')).include?("{test: 'ok'}")
+    assert File.read(File.join(public_folder, 'data.json')).include?("{test: 'ok'}")
+
+    assert File.mtime(File.join(public_folder, 'yesterday/index.html')) == Time.new(2002, 10, 31)
   end
 
 end

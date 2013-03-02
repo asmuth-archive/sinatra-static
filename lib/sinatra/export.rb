@@ -36,11 +36,18 @@ module Sinatra
     end
 
     def build_path(path, dir)
-      body = get_path(path).body
-      ::FileUtils.mkdir_p(dir_for_path(path, dir))
-      ::File.open(file_for_path(path, dir), 'w+') do |f|
+      response = get_path(path)
+      body = response.body
+      mtime = response.headers.key?("Last-Modified") ?
+        Time.httpdate(response.headers["Last-Modified"]) : Time.now
+      file_path = file_for_path(path, dir)
+      dir_path = dir_for_path(path, dir)
+
+      ::FileUtils.mkdir_p(dir_path)
+      ::File.open(file_path, 'w+') do |f|
         f.write(body)
       end
+      ::FileUtils.touch(file_path, :mtime => mtime)
     end
 
     def get_path(path)
