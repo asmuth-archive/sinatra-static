@@ -1,3 +1,7 @@
+New In 0.9.4
+
+* Now set files mtime according to response Last-Modified header
+
 New In 0.9.3
 
 * Removed unnecessary development dependencies.

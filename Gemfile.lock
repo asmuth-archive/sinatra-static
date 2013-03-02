@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sinatra-export (0.9.3)
+    sinatra-export (0.9.4)
       rack
       sinatra
       sinatra-advanced-routes
