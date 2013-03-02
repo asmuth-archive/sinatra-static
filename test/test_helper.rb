@@ -2,7 +2,6 @@ require 'rack/test'
 require 'test/unit'
 require 'sinatra/advanced_routes'
 require 'sinatra/export'
-require 'awesome_print'
 
 # Helper based on sinatra-assetpack test helper
 # © 2011, Rico Sta. Cruz. Released under the MIT License 
