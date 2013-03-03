@@ -8,7 +8,7 @@ PATH
       term-ansicolor
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     awesome_print (1.1.0)
     backports (3.0.3)
