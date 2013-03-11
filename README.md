@@ -15,7 +15,7 @@ Add to your `Gemfile` :
 gem 'sinatra-export'
 ```
 
-Setup your application with [sinatra-advanced-routes](https://github.com/hooktstudios/sinatra-advanced-routes) :
+Setup your application with [sinatra-advanced-routes](https://github.com/rkh/sinatra-advanced-routes) :
 
 ```ruby
 register Sinatra::AdvancedRoutes
