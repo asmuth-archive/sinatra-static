@@ -1,11 +1,13 @@
 Gem::Specification.new do |s|
   s.name = 'sinatra-export'
-  s.version = '0.9.4'
+  s.version = '0.9.5'
   
   s.authors = ['Jean-Philippe Doyle', 'Paul Asmuth']
   s.description = 'Exports all your Sinatra application routes to static files in your public folder'
   s.summary = 'Sinatra static export.'
   s.email = 'jeanphilippe.doyle@hooktstudios.com'
+  s.cert_chain  = ['certs/j15e.pem']
+  s.signing_key = File.expand_path('~/.gem/private_key.pem') if $0 =~ /gem\z/
   s.files = [
     'Gemfile',
     'Gemfile.lock',
