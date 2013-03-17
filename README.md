@@ -19,7 +19,7 @@ Setup your `Rakefile` :
 
 ```ruby
 APP_FILE  = 'app.rb'
-APP_CLASS = 'App'
+APP_CLASS = 'Sinatra::Application'
 
 require 'sinatra/export/rake'
 ```
