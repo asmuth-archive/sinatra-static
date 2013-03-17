@@ -3,6 +3,8 @@ PATH
   specs:
     sinatra-export (1.0.0)
       rack
+      rack-test
+      rake
       sinatra
       sinatra-advanced-routes
       term-ansicolor
