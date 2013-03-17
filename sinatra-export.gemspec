@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'sinatra-export'
-  s.version = '0.9.5'
+  s.version = '1.0.0'
   
   s.authors = ['Jean-Philippe Doyle', 'Paul Asmuth']
   s.description = 'Exports all your Sinatra application routes to static files in your public folder'
