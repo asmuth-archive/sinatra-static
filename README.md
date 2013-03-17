@@ -15,12 +15,6 @@ Add to your `Gemfile` :
 gem 'sinatra-export'
 ```
 
-Setup your application with [sinatra-advanced-routes](https://github.com/rkh/sinatra-advanced-routes) :
-
-```ruby
-register Sinatra::AdvancedRoutes
-```
-
 Setup your `Rakefile` :
 
 ```ruby
@@ -36,12 +30,11 @@ Sample Sinatra application building static pages :
 
 ```ruby
 require 'sinatra'
-require 'sinatra/advanced_routes'
 require 'sinatra/export'
 
 class App < Sinatra::Base
 
-    register Sinatra::AdvancedRoutes
+    register Sinatra::Export
 
     get '/' do    
         "<h1>My homepage</h1>"
@@ -71,7 +64,7 @@ Running your app ex. `rake sinatra:export` will automatically generate theses fi
 Or invoke it manually within ruby code :
 
 ````ruby
-Sinatra::Export.new(App).build!
+App.export!
 ```
 
 ## Other resources

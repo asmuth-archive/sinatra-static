@@ -1,7 +1,6 @@
 require 'rack/test'
 require 'test/unit'
-require 'sinatra/advanced_routes'
-require 'sinatra/export'
+require 'sinatra/base'
 
 # Helper based on sinatra-assetpack test helper
 # © 2011, Rico Sta. Cruz. Released under the MIT License 
@@ -15,7 +14,6 @@ class UnitTest < Test::Unit::TestCase
     set :root, File.expand_path('../app', __FILE__)
     enable :raise_errors
     disable :show_exceptions
-    register Sinatra::AdvancedRoutes
   end
 
   def setup 

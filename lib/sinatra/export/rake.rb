@@ -27,7 +27,6 @@ end
 namespace :sinatra do
   desc "Export static application"
   task :export do
-    require 'sinatra/export'
-    Sinatra::Export.new(app).build!
+    app.export!
   end
 end
