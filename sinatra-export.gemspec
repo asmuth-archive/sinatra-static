@@ -15,11 +15,16 @@ Gem::Specification.new do |s|
     'lib/sinatra/export.rb',
     'lib/sinatra/export/rake.rb',
     'README.md',
-    'LICENSE'
+    'LICENSE',
+    'UPGRADING'
   ]
   s.homepage = 'http://github.com/hooktstudios/sinatra-export'
   s.license = 'MIT'
   s.required_ruby_version = '>= 1.8.7'
+
+  if File.exists?('UPGRADING')
+    s.post_install_message = File.read("UPGRADING")
+  end
 
   s.add_runtime_dependency 'term-ansicolor'
   s.add_runtime_dependency 'sinatra'

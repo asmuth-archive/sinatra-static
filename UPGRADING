@@ -1,0 +1,14 @@
+##################################################
+#  NOTE FOR UPGRADING FROM PRE-1.0 VERSION       #
+##################################################
+
+Sinatra::Export is now a Sinatra extension
+and advanced routes are auto-loaded.
+
+To upgrade, replace in your application :
+
+  register Sinatra::AdvancedRoutes
+
+with :
+
+  register Sinatra::Export
