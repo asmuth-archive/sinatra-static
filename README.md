@@ -32,22 +32,16 @@ Sample Sinatra application building static pages :
 require 'sinatra'
 require 'sinatra/export'
 
-class App < Sinatra::Base
+get '/' do
+  "<h1>My homepage</h1>"
+end
 
-    register Sinatra::Export
+get '/contact' do
+  "<h1>My contact page<h1>"
+end
 
-    get '/' do    
-        "<h1>My homepage</h1>"
-    end
-
-    get '/contact' do
-        "<h1>My contact page<h1>"
-    end
-
-    get '/data.json' do
-      "{test: 'ok'}"
-    end
-
+get '/data.json' do
+  "{test: 'ok'}"
 end
 ```
 
