@@ -1,26 +1,28 @@
-New in 1.0.0 
+# Changelog
+
+## 1.0.0 - 2013-03-17
 
 * You must now register Sinatra::Export extension.
-* Sinatra::AdvancedRoutes is now auto loaded.
+* Sinatra::AdvancedRoutes is now auto loaded. (#5)
 * Renamed build! method export!.
 
-New in 0.9.5
+## 0.9.5
 
 * Improvement : signed gem.
 
-New In 0.9.4
+## 0.9.4
 
 * Now set files mtime according to response Last-Modified header
 
-New In 0.9.3
+## 0.9.3
 
 * Removed unnecessary development dependencies.
 
-New In 0.9.2
+## 0.9.2
 
 * Bug fix: Correctly support path with file extension (.json, .csv, etc.). Issue #1
 
-New In 0.9.1
+## 0.9.1
 
 * API CHANGE: Now calling .build! without path parameter, using Sinatra application :public_folder setting.
 * Feature: Added a rake task sinatra:export
