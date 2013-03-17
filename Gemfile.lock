@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sinatra-export (1.0.0)
+    sinatra-export (1.0.1)
       rack
       rack-test
       rake

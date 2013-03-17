@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1 - 2013-03-17
+
+* Add missing rake & rack-test depencendies
+
 ## 1.0.0 - 2013-03-17
 
 * You must now register Sinatra::Export extension.
