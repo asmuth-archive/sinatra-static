@@ -27,6 +27,6 @@ end
 namespace :sinatra do
   desc "Export static application"
   task :export do
-    app.build!
+    app.export!
   end
 end

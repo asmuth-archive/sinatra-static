@@ -31,7 +31,7 @@ class SinatraExportBuildTest < UnitTest
     FileUtils.rm_rf public_folder
     FileUtils.mkdir public_folder
 
-    App.build!
+    App.export!
 
     assert File.read(File.join(public_folder, 'index.html')).include?('homepage')
     assert File.read(File.join(public_folder, 'contact/index.html')).include?('contact')

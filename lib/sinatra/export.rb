@@ -15,7 +15,7 @@ module Sinatra
     end
 
     module ClassMethods
-      def build!
+      def export!
         Builder.new(self).build!
       end
     end
