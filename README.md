@@ -58,7 +58,7 @@ Running your app ex. `rake sinatra:export` will automatically generate theses fi
 Or invoke it manually within ruby code :
 
 ````ruby
-App.export!
+Sinatra::Application.export!
 ```
 
 ## Other resources
