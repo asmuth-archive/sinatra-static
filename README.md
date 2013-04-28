@@ -9,15 +9,13 @@
 
 ## Installation
 
-Add to your `Gemfile` :
-
 ```ruby
+# Gemfile
 gem 'sinatra-export'
 ```
 
-Setup your `Rakefile` :
-
 ```ruby
+# Rakefile
 APP_FILE  = 'app.rb'
 APP_CLASS = 'Sinatra::Application'
 
