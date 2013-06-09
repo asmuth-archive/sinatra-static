@@ -17,9 +17,12 @@ this simple app:
 
   require 'sinatra'
   require "sinatra/advanced_routes"
+  require 'rack/test'
   require 'sinatra_static'
 
   class MyApp::App < Sinatra::Base  
+  
+    register Sinatra::AdvancedRoutes
 
     get '/' do    
       "my homepage"
