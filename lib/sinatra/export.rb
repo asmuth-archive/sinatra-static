@@ -68,16 +68,32 @@ module Sinatra
           end
         end
 
+
+        FILE_FOR_PATH_PATTERN = %r{
+          [^/\.]+
+          .
+          (
+            #{app.settings.export_extensions.join("|")}
+          )
+        $}x
+
         def file_for_path(path, dir)
-          if path.match(/[^\/\.]+.(#{app.settings.export_extensions.join("|")})$/)
+          if path.match(FILE_FOR_PATH_PATTERN)
             dir.join path
           else
             dir.join( path ).join( 'index.html' )
           end
         end
 
+
+        DIR_FOR_PATH_PATTERN = %r{
+          (.*)
+          /
+          [^/]+
+        $}x
+
         def dir_for_path(path, dir)
-          file_for_path(path, dir).match(/(.*)\/[^\/]+$/)[1]
+          file_for_path(path, dir).match(DIR_FOR_PATH_PATTERN)[1]
         end
 
         def handle_error_dir_not_found!(dir)
