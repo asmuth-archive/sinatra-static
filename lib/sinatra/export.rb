@@ -36,7 +36,7 @@ module Sinatra
       end
 
       def build!
-        dir = app.public_folder
+        dir = ENV["EXPORT_BUILD_DIR"] || app.public_folder
         handle_error_dir_not_found!(dir) unless dir_exists?(dir)
         app.each_route do |route|
           next if route.verb != 'GET' or not route.path.is_a? String
