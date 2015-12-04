@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'sinatra/advanced_routes'
 require 'rack/test'
 require 'term/ansicolor'
+require 'pathname'
 
 module Sinatra
   module Export
@@ -37,7 +38,7 @@ module Sinatra
 
       def build!
         dir = ENV["EXPORT_BUILD_DIR"] || app.public_folder
-        handle_error_dir_not_found!(dir) unless dir_exists?(dir)
+        handle_error_dir_not_found!(dir) unless dir.exists?(dir) && dir.directory?
         app.each_route do |route|
           next if route.verb != 'GET' or not route.path.is_a? String
           build_path(route.path, dir)
@@ -54,7 +55,7 @@ module Sinatra
           file_path = file_for_path(path, dir)
           dir_path = dir_for_path(path, dir)
 
-          ::FileUtils.mkdir_p(dir_path)
+          dir_path.mkdir_p
           ::File.open(file_path, 'w+') do |f|
             f.write(body)
           end
@@ -69,14 +70,10 @@ module Sinatra
 
         def file_for_path(path, dir)
           if path.match(/[^\/\.]+.(#{app.settings.export_extensions.join("|")})$/)
-            ::File.join(dir, path)
+            dir.join path
           else
-            ::File.join(dir, path, 'index.html')
+            dir.join( path ).join( 'index.html' )
           end
-        end
-
-        def dir_exists?(dir)
-          ::File.exists?(dir) && ::File.directory?(dir)
         end
 
         def dir_for_path(path, dir)
@@ -84,7 +81,7 @@ module Sinatra
         end
 
         def handle_error_dir_not_found!(dir)
-          handle_error!("can't find output directory: #{dir}")
+          handle_error!("can't find output directory: #{dir.to_s}")
         end
 
         def handle_error_non_200!(path)
