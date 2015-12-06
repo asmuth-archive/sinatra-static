@@ -4,3 +4,4 @@ test/app/public/
 bin/
 vendor/
 vendor.noindex/
+coverage/
