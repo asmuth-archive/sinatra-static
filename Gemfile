@@ -2,13 +2,15 @@ source 'https://rubygems.org'
 
 group :development do
   gem "pry-byebug"
-  gem 'awesome_print'
 end
 
 group :test do
   gem 'rack-test'
   gem 'rake'
-  gem 'test-unit'
+  gem 'rspec'
+  gem 'rspec-its'
+  gem 'simplecov'
+  gem 'fakefs', :require => "fakefs/safe"
 end
 
 gemspec
