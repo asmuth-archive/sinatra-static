@@ -36,31 +36,51 @@ module Sinatra
         @app
       end
 
-      def build!
-        dir = ENV["EXPORT_BUILD_DIR"] || app.public_folder
-        handle_error_dir_not_found!(dir) unless dir.exists?(dir) && dir.directory?
-        app.each_route do |route|
-          next if route.verb != 'GET' or not route.path.is_a? String
-          build_path(route.path, dir)
+
+      def build! paths: nil, skips: []
+        dir = Pathname( ENV["EXPORT_BUILD_DIR"] || app.public_folder )
+        handle_error_dir_not_found!(dir) unless dir.exist? && dir.directory?
+
+        paths = self if paths.nil?
+
+        paths.send( :each ) do |path|
+          #next if skips.include? path
+          build_path(path, dir)
         end
       end
 
       private
+
+
+        def each
+          app.each_route do |route|
+            next if route.verb != 'GET' or not route.path.respond_to? :to_s
+            yield route.path
+          end
+        end
 
         def build_path(path, dir)
           response = get_path(path)
           body = response.body
           mtime = response.headers.key?("Last-Modified") ?
             Time.httpdate(response.headers["Last-Modified"]) : Time.now
-          file_path = file_for_path(path, dir)
-          dir_path = dir_for_path(path, dir)
 
-          dir_path.mkdir_p
+          pattern = %r{
+            [^/\.]+
+            \.
+            (
+              #{app.settings.export_extensions.join("|")}
+            )
+          $}x
+          file_path = Pathname( File.join dir, path )
+          file_path = file_path.join( 'index.html' ) unless  path.match(pattern)
+          ::FileUtils.mkdir_p( file_path.dirname )
           ::File.open(file_path, 'w+') do |f|
             f.write(body)
           end
           ::FileUtils.touch(file_path, :mtime => mtime)
         end
+
 
         def get_path( path)
           get(path).tap do |resp|
@@ -68,33 +88,6 @@ module Sinatra
           end
         end
 
-
-        FILE_FOR_PATH_PATTERN = %r{
-          [^/\.]+
-          .
-          (
-            #{app.settings.export_extensions.join("|")}
-          )
-        $}x
-
-        def file_for_path(path, dir)
-          if path.match(FILE_FOR_PATH_PATTERN)
-            dir.join path
-          else
-            dir.join( path ).join( 'index.html' )
-          end
-        end
-
-
-        DIR_FOR_PATH_PATTERN = %r{
-          (.*)
-          /
-          [^/]+
-        $}x
-
-        def dir_for_path(path, dir)
-          file_for_path(path, dir).match(DIR_FOR_PATH_PATTERN)[1]
-        end
 
         def handle_error_dir_not_found!(dir)
           handle_error!("can't find output directory: #{dir.to_s}")
