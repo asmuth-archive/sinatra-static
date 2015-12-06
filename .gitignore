@@ -1,2 +1,6 @@
 test/app/public/
 *.gem
+.bundle/
+bin/
+vendor/
+vendor.noindex/
