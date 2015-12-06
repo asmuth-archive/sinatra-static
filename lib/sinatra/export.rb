@@ -16,8 +16,8 @@ module Sinatra
     end
 
     module ClassMethods
-      def export!
-        Builder.new(self).build!
+      def export! paths: nil, skips: []
+        Builder.new(self).build! paths: paths, skips: skips
       end
     end
 
