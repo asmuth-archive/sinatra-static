@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 group :development do
-  gem 'debugger' unless RUBY_VERSION < '1.9'
+  gem "pry-byebug"
   gem 'awesome_print'
 end
 
