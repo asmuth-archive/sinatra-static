@@ -178,5 +178,52 @@ describe "Sinatra Export" do
   
   end
 
+  context "Given skips" do
+    before :all do
+      FileUtils.mkdir_p File.join(__dir__, "support/fixtures", "app/public")
+    end
+
+    include_context "app"
+    include_examples "Server is up"
+
+    describe "Exporting" do
+      before :all do
+        app.export! skips: ["/", "/contact"]
+      end
+
+      context "index" do
+        subject {
+          File.join(app.public_folder, 'index.html')
+        }
+        it { File.exist?(subject).should be_falsy }
+      end
+      context "contact" do
+        subject {
+          File.join(app.public_folder, 'contact/index.html')
+        }
+        it { File.exist?(subject).should be_falsy }
+      end
+      context "data.json" do
+        subject {
+          File.join(app.public_folder, 'data.json')
+        }
+        it { File.read(subject).should include "{test: 'ok'}" }
+      end
+      context "yesterday" do
+        subject {
+          File.new File.join(app.public_folder, 'yesterday/index.html')
+        }
+        it { subject.read.should include 'old content' }
+        its(:mtime) { should == Time.local(2002, 10, 31) }
+      end
+
+      after :all do
+        FileUtils.rm_rf File.join(__dir__, "support/fixtures", "app" )
+      end
+    end
+  
+  
+  end
+
 
 end
