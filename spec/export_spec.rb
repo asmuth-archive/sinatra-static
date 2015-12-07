@@ -51,12 +51,31 @@ describe "Sinatra Export" do
         FileUtils.mkdir_p File.join(__dir__, "support/fixtures", "app/public")
         app.export!
       end
-
-      subject {
-        File.join(app.public_folder, 'index.html')
-      }
-      it { should be_a_kind_of String }
-      it { File.read(subject).should include 'homepage' }
+      context "index" do
+        subject {
+          File.join(app.public_folder, 'index.html')
+        }
+        it { File.read(subject).should include 'homepage' }
+      end
+      context "contact" do
+        subject {
+          File.join(app.public_folder, 'contact/index.html')
+        }
+        it { File.read(subject).should include 'contact' }
+      end
+      context "data.json" do
+        subject {
+          File.join(app.public_folder, 'data.json')
+        }
+        it { File.read(subject).should include "{test: 'ok'}" }
+      end
+      context "yesterday" do
+        subject {
+          File.new File.join(app.public_folder, 'yesterday/index.html')
+        }
+        it { subject.read.should include 'old content' }
+        its(:mtime) { should == Time.local(2002, 10, 31) }
+      end
 
       after :all do
         FileUtils.rm_rf File.join(__dir__, "support/fixtures", "app" )
@@ -78,11 +97,31 @@ describe "Sinatra Export" do
         app.export!
       end
 
-      subject {
-        File.join(ENV["EXPORT_BUILD_DIR"], 'index.html')
-      }
-      it { should be_a_kind_of String }
-      it { File.read(subject).should include 'homepage' }
+      context "index" do
+        subject {
+          File.join(ENV["EXPORT_BUILD_DIR"], 'index.html')
+        }
+        it { File.read(subject).should include 'homepage' }
+      end
+      context "contact" do
+        subject {
+          File.join(ENV["EXPORT_BUILD_DIR"], 'contact/index.html')
+        }
+        it { File.read(subject).should include 'contact' }
+      end
+      context "data.json" do
+        subject {
+          File.join(ENV["EXPORT_BUILD_DIR"], 'data.json')
+        }
+        it { File.read(subject).should include "{test: 'ok'}" }
+      end
+      context "yesterday" do
+        subject {
+          File.new File.join(ENV["EXPORT_BUILD_DIR"], 'yesterday/index.html')
+        }
+        it { subject.read.should include 'old content' }
+        its(:mtime) { should == Time.local(2002, 10, 31) }
+      end
 
       after :all do
         FileUtils.rm_rf ENV["EXPORT_BUILD_DIR"]
