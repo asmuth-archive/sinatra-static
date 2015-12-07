@@ -125,6 +125,53 @@ describe "Sinatra Export" do
 
       after :all do
         FileUtils.rm_rf ENV["EXPORT_BUILD_DIR"]
+        ENV["EXPORT_BUILD_DIR"] = nil
+      end
+    end
+  
+  
+  end
+
+  context "Given paths" do
+    before :all do
+      FileUtils.mkdir_p File.join(__dir__, "support/fixtures", "app/public")
+    end
+
+    include_context "app"
+    include_examples "Server is up"
+
+    describe "Exporting" do
+      before :all do
+        app.export! paths: ["/", "/contact"]
+      end
+
+      context "index" do
+        subject {
+          File.join(app.public_folder, 'index.html')
+        }
+        it { File.read(subject).should include 'homepage' }
+      end
+      context "contact" do
+        subject {
+          File.join(app.public_folder, 'contact/index.html')
+        }
+        it { File.read(subject).should include 'contact' }
+      end
+      context "data.json" do
+        subject {
+          File.join(app.public_folder, 'data.json')
+        }
+        it { File.exist?(subject).should be_falsy }
+      end
+      context "yesterday" do
+        subject {
+          File.join(app.public_folder, 'yesterday/index.html')
+        }
+        it { File.exist?(subject).should be_falsy }
+      end
+
+      after :all do
+        FileUtils.rm_rf File.join(__dir__, "support/fixtures", "app" )
       end
     end
   
