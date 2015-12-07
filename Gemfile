@@ -1,14 +1,16 @@
 source 'https://rubygems.org'
 
 group :development do
-  gem 'debugger' unless RUBY_VERSION < '1.9'
-  gem 'awesome_print'
+  gem "pry-byebug"
 end
 
 group :test do
   gem 'rack-test'
   gem 'rake'
-  gem 'test-unit'
+  gem 'rspec'
+  gem 'rspec-its'
+  gem 'simplecov'
+  gem 'fakefs', :require => "fakefs/safe"
 end
 
 gemspec
