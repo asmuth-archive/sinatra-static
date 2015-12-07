@@ -44,7 +44,7 @@ module Sinatra
         paths = self if paths.nil?
 
         paths.send( :each ) do |path|
-          #next if skips.include? path
+          next if skips.include? path
           build_path(path, dir)
         end
       end
