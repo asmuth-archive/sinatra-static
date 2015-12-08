@@ -5,3 +5,4 @@ bin/
 vendor/
 vendor.noindex/
 coverage/
+Gemfile.lock
