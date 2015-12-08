@@ -16,8 +16,12 @@ module Sinatra
     end
 
     module ClassMethods
-      def export! paths: nil, skips: []
-        Builder.new(self).build! paths: paths, skips: skips
+      # @example
+      #   app.export paths: "/" do |body|
+      #     # something here
+      #   end
+      def export! paths: nil, skips: [], &block
+        Builder.new(self).build! paths: paths, skips: skips, &block
       end
     end
 
@@ -37,30 +41,47 @@ module Sinatra
       end
 
 
-      def build! paths: nil, skips: []
+      def build!( paths: nil, skips: [], &block )
         dir = Pathname( ENV["EXPORT_BUILD_DIR"] || app.public_folder )
         handle_error_dir_not_found!(dir) unless dir.exist? && dir.directory?
 
-        paths = self if paths.nil?
-
-        paths.send( :each ) do |path|
-          next if skips.include? path
-          build_path(path, dir)
+        if paths.nil?
+          paths_e = self.send( :route_paths ).to_enum
+        else
+          paths_e = paths.to_enum
         end
+
+        catch(:no_more_paths) {
+          while true
+            begin
+              path = paths_e.next
+              unless skips.include? path
+                response = get_path(path)
+                file_path = build_path(path: path, dir: dir, response: response)
+                block.call response, path if block
+              end
+            rescue StopIteration
+              throw(:no_more_paths)
+            end
+          end
+        }
       end
 
       private
 
 
-        def each
+        def route_paths
+          route_paths = []
           app.each_route do |route|
             next if route.verb != 'GET' or not route.path.respond_to? :to_s
-            yield route.path
+            route_paths << route.path
           end
+          route_paths
         end
 
-        def build_path(path, dir)
-          response = get_path(path)
+
+        # @return [String] file_path
+        def build_path(path:, dir:, response:)
           body = response.body
           mtime = response.headers.key?("Last-Modified") ?
             Time.httpdate(response.headers["Last-Modified"]) : Time.now
@@ -75,10 +96,16 @@ module Sinatra
           file_path = Pathname( File.join dir, path )
           file_path = file_path.join( 'index.html' ) unless  path.match(pattern)
           ::FileUtils.mkdir_p( file_path.dirname )
-          ::File.open(file_path, 'w+') do |f|
-            f.write(body)
-          end
+          write_path content: body, path: file_path
           ::FileUtils.touch(file_path, :mtime => mtime)
+          file_path
+        end
+
+
+        def write_path content:, path:
+          ::File.open(path, 'w+') do |f|
+            f.write(content)
+          end
         end
 
 
