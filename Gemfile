@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 group :development do
+  gem "term-ansicolor"
   gem "pry-byebug"
 end
 

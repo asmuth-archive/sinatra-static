@@ -3,7 +3,6 @@ PATH
   specs:
     sinatra-export (1.0.1)
       rack
-      rack-test
       rake
       sinatra
       sinatra-advanced-routes
@@ -77,6 +76,7 @@ DEPENDENCIES
   rspec-its
   simplecov
   sinatra-export!
+  term-ansicolor
 
 BUNDLED WITH
    1.10.2
