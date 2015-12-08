@@ -2,6 +2,7 @@
 
 require 'rspec'
 require 'rspec/its'
+require 'pry-byebug' if ENV["WITH_PRY"]
 Spec_dir = File.expand_path( File.dirname __FILE__ )
 
 
