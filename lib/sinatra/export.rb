@@ -23,12 +23,12 @@ module Sinatra
       #       builder.paths << "/echo-1"
       #     end
       #   end
-      def export! paths: nil, skips: [], &block
+      def export! paths: nil, skips: [], filters: [], &block
         @builder ||= 
           if self.builder
             self.builder
           else
-            Builder.new(self,paths: paths, skips: skips)
+            Builder.new(self,paths: paths, skips: skips, filters: filters )
           end
         @builder.build! &block
       end
@@ -46,7 +46,7 @@ module Sinatra
       # @param [Array] paths Paths that will be requested by the builder.
       # @param [Array] skips: Paths that will be ignored by the builder.
       # @param [TrueClass] use_routes Whether to use Sinatra AdvancedRoutes to look for paths to send to the builder.
-      def initialize(app, paths: nil, skips: nil, use_routes: nil )
+      def initialize(app, paths: nil, skips: nil, use_routes: nil, filters: [] )
         @app = app
         @use_routes = 
           paths.nil? && use_routes.nil? ?
@@ -55,6 +55,7 @@ module Sinatra
         @paths = paths || []
         @skips = skips || []
         @enum = []
+        @filters = filters
       end
 
       attr_accessor :paths, :skips, :last_response, :last_path
@@ -132,6 +133,11 @@ module Sinatra
 
 
         def write_path content:, path:
+          if @filters && !@filters.empty?
+            content = @filters.inject(content) do |current_content,filter|
+              filter.call current_content
+            end
+          end
           ::File.open(path, 'w+') do |f|
             f.write(content)
           end
