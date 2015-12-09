@@ -34,11 +34,11 @@ module Sinatra
         include Term::ANSIColor
       end
 
-      # paths | use_routes |
-      #   f          t        t
-      #   t         t         t
-      #   t         f/nil     f
-      #   f         f/nil     f
+
+      # @param [Sinatra::Base] app The Sinatra app
+      # @param [Array] paths Paths that will be requested by the builder.
+      # @param [Array] skips: Paths that will be ignored by the builder.
+      # @param [TrueClass] use_routes Whether to use Sinatra AdvancedRoutes to look for paths to send to the builder.
       def initialize(app, paths: nil, skips: nil, use_routes: nil )
         @app = app
         @use_routes = 
