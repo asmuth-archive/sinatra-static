@@ -21,7 +21,7 @@ module Sinatra
       #     # something here
       #   end
       def export! paths: nil, skips: [], &block
-        Builder.new(self).build! paths: paths, skips: skips, &block
+        Builder.new(self,paths: paths, skips: skips).build! &block
       end
     end
 
@@ -32,8 +32,10 @@ module Sinatra
         include Term::ANSIColor
       end
 
-      def initialize(app)
+      def initialize(app, paths: nil, skips: nil )
         @app = app
+        @paths = paths
+        @skips = skips || []
       end
 
       def app
@@ -41,21 +43,23 @@ module Sinatra
       end
 
 
-      def build!( paths: nil, skips: [], &block )
+      def build!( &block )
         dir = Pathname( ENV["EXPORT_BUILD_DIR"] || app.public_folder )
         handle_error_dir_not_found!(dir) unless dir.exist? && dir.directory?
 
-        if paths.nil?
+
+        if @paths.nil?
           paths_e = self.send( :route_paths ).to_enum
         else
-          paths_e = paths.to_enum
+          paths_e = @paths.to_enum
         end
 
         catch(:no_more_paths) {
           while true
             begin
               path = paths_e.next
-              unless skips.include? path
+              # TODO handle named captures paths
+              unless @skips.include? path
                 response = get_path(path)
                 file_path = build_path(path: path, dir: dir, response: response)
                 block.call response, path if block
