@@ -13,6 +13,7 @@ module Sinatra
       end
       app.set :export_extensions, %w(css js xml json html csv)
       app.extend ClassMethods
+      app.set :builder, nil
     end
 
     module ClassMethods
@@ -23,7 +24,13 @@ module Sinatra
       #     end
       #   end
       def export! paths: nil, skips: [], &block
-        @builder ||= Builder.new(self,paths: paths, skips: skips).build! &block
+        @builder ||= 
+          if self.builder
+            self.builder
+          else
+            Builder.new(self,paths: paths, skips: skips)
+          end
+        @builder.build! &block
       end
     end
 
