@@ -16,7 +16,7 @@ describe "Sinatra Export" do
         end
 
         get '/' do
-          "homepage"
+          "<p>homepage</p><p><a href='/echo-1'>echo-1</a></p>"
         end
 
         get '/contact' do
@@ -30,6 +30,10 @@ describe "Sinatra Export" do
         get '/yesterday' do
           last_modified Time.local(2002, 10, 31)
           "old content"
+        end
+
+        get "/echo-:this" do |this|
+          this.to_s
         end
       end
     end
@@ -45,12 +49,17 @@ describe "Sinatra Export" do
   context "Using the default settings" do
     include_context "app"
     include_examples "Server is up"
+    before :all do
+      FileUtils.mkdir_p File.join(__dir__, "support/fixtures", "app/public")
+      app.export!
+    end
+
+    after :all do
+      FileUtils.rm_rf File.join(__dir__, "support/fixtures", "app" )
+    end
 
     describe "Exporting" do
-      before :all do
-        FileUtils.mkdir_p File.join(__dir__, "support/fixtures", "app/public")
-        app.export!
-      end
+
       context "index" do
         subject {
           File.join(app.public_folder, 'index.html')
@@ -75,10 +84,6 @@ describe "Sinatra Export" do
         }
         it { subject.read.should include 'old content' }
         its(:mtime) { should == Time.local(2002, 10, 31) }
-      end
-
-      after :all do
-        FileUtils.rm_rf File.join(__dir__, "support/fixtures", "app" )
       end
     end
   end
@@ -137,6 +142,11 @@ describe "Sinatra Export" do
       FileUtils.mkdir_p File.join(__dir__, "support/fixtures", "app/public")
     end
 
+    after :all do
+      FileUtils.rm_rf File.join(__dir__, "support/fixtures", "app" )
+    end
+
+
     include_context "app"
     include_examples "Server is up"
 
@@ -169,18 +179,17 @@ describe "Sinatra Export" do
         }
         it { File.exist?(subject).should be_falsy }
       end
-
-      after :all do
-        FileUtils.rm_rf File.join(__dir__, "support/fixtures", "app" )
-      end
-    end
-  
+    end  
   
   end
 
   context "Given skips" do
     before :all do
       FileUtils.mkdir_p File.join(__dir__, "support/fixtures", "app/public")
+    end
+
+    after :all do
+      FileUtils.rm_rf File.join(__dir__, "support/fixtures", "app" )
     end
 
     include_context "app"
@@ -216,14 +225,111 @@ describe "Sinatra Export" do
         it { subject.read.should include 'old content' }
         its(:mtime) { should == Time.local(2002, 10, 31) }
       end
-
-      after :all do
-        FileUtils.rm_rf File.join(__dir__, "support/fixtures", "app" )
-      end
     end
   
   
   end
 
+
+  context "Using a block" do
+    include_context "app"
+    include_examples "Server is up"
+    before :all do
+      FileUtils.mkdir_p File.join(__dir__, "support/fixtures", "app/public")
+    end
+
+    after :all do
+      FileUtils.rm_rf File.join(__dir__, "support/fixtures", "app" )
+    end
+
+    describe "Exporting" do
+      before :all do
+        app.export! do |builder|
+          if builder.last_response.body.include? "/echo-1"
+            builder.paths << "/echo-1"
+          end
+        end
+      end
+      context "index" do
+        subject {
+          File.join(app.public_folder, 'index.html')
+        }
+        it { File.read(subject).should include 'homepage' }
+      end
+      context "contact" do
+        subject {
+          File.join(app.public_folder, 'contact/index.html')
+        }
+        it { File.read(subject).should include 'contact' }
+      end
+      context "data.json" do
+        subject {
+          File.join(app.public_folder, 'data.json')
+        }
+        it { File.read(subject).should include "{test: 'ok'}" }
+      end
+      context "yesterday" do
+        subject {
+          File.new File.join(app.public_folder, 'yesterday/index.html')
+        }
+        it { subject.read.should include 'old content' }
+        its(:mtime) { should == Time.local(2002, 10, 31) }
+      end
+
+      context "named parameters" do
+        subject {
+          File.join(app.public_folder, 'echo-1/index.html')
+        }
+        it { File.read(subject).should include '1' }
+      end
+    end
+  end
+
+  context "Given a builder" do
+    include_context "app"
+    include_examples "Server is up"
+    before :all do
+      FileUtils.mkdir_p File.join(__dir__, "support/fixtures", "app/public")
+    end
+
+    after :all do
+      FileUtils.rm_rf File.join(__dir__, "support/fixtures", "app" )
+    end
+
+    describe "Exporting" do
+      before :all do
+        app.builder = Sinatra::Export::Builder.new(self,paths: ["/", "/contact"])
+        app.export!
+      end
+
+
+      context "index" do
+        subject {
+          File.join(app.public_folder, 'index.html')
+        }
+        it { File.read(subject).should include 'homepage' }
+      end
+      context "contact" do
+        subject {
+          File.join(app.public_folder, 'contact/index.html')
+        }
+        it { File.read(subject).should include 'contact' }
+      end
+      context "data.json" do
+        subject {
+          File.join(app.public_folder, 'data.json')
+        }
+        it { File.read(subject).should include "{test: 'ok'}" }
+      end
+      context "yesterday" do
+        subject {
+          File.new File.join(app.public_folder, 'yesterday/index.html')
+        }
+        it { subject.read.should include 'old content' }
+        its(:mtime) { should == Time.local(2002, 10, 31) }
+      end
+    end
+    
+  end
 
 end

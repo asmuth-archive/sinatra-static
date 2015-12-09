@@ -13,11 +13,24 @@ module Sinatra
       end
       app.set :export_extensions, %w(css js xml json html csv)
       app.extend ClassMethods
+      app.set :builder, nil
     end
 
     module ClassMethods
-      def export! paths: nil, skips: []
-        Builder.new(self).build! paths: paths, skips: skips
+      # @example
+      #   app.export paths: "/" do |builder|
+      #     if builder.last_response.body.include? "/echo-1"
+      #       builder.paths << "/echo-1"
+      #     end
+      #   end
+      def export! paths: nil, skips: [], &block
+        @builder ||= 
+          if self.builder
+            self.builder
+          else
+            Builder.new(self,paths: paths, skips: skips)
+          end
+        @builder.build! &block
       end
     end
 
@@ -28,39 +41,76 @@ module Sinatra
         include Term::ANSIColor
       end
 
-      def initialize(app)
+
+      # @param [Sinatra::Base] app The Sinatra app
+      # @param [Array] paths Paths that will be requested by the builder.
+      # @param [Array] skips: Paths that will be ignored by the builder.
+      # @param [TrueClass] use_routes Whether to use Sinatra AdvancedRoutes to look for paths to send to the builder.
+      def initialize(app, paths: nil, skips: nil, use_routes: nil )
         @app = app
+        @use_routes = 
+          paths.nil? && use_routes.nil? ?
+            true :
+            use_routes
+        @paths = paths || []
+        @skips = skips || []
+        @enum = []
       end
+
+      attr_accessor :paths, :skips, :last_response, :last_path
 
       def app
         @app
       end
 
 
-      def build! paths: nil, skips: []
+      def build!( &block )
         dir = Pathname( ENV["EXPORT_BUILD_DIR"] || app.public_folder )
         handle_error_dir_not_found!(dir) unless dir.exist? && dir.directory?
 
-        paths = self if paths.nil?
-
-        paths.send( :each ) do |path|
-          next if skips.include? path
-          build_path(path, dir)
+        if @use_routes
+          @enum.push self.send( :route_paths ).to_enum
         end
+        @enum.push @paths.to_enum    
+
+        catch(:no_more_paths) {
+          enum = get_enum
+          while true
+            begin
+              last_path = enum.next
+              next if last_path =~ /((:\w+)|\*)/ # keys and splats
+              next if @skips.include? last_path
+              @last_response = get_path(last_path)
+              file_path = build_path(path: last_path, dir: dir, response: last_response)
+              block.call self if block
+            rescue StopIteration
+              retry if enum = get_enum
+              throw(:no_more_paths)
+            end
+          end
+        }
       end
 
       private
 
-
-        def each
-          app.each_route do |route|
-            next if route.verb != 'GET' or not route.path.respond_to? :to_s
-            yield route.path
-          end
+        # @return [Enumerator] The next enumerator to provide paths for the builder.
+        def get_enum
+          @enum.shift
         end
 
-        def build_path(path, dir)
-          response = get_path(path)
+
+        def route_paths
+          route_paths = []
+          app.each_route do |route|
+            next if route.verb != 'GET' or not route.path.respond_to? :to_s
+            route_paths << route.path
+          end
+          route_paths
+        end
+
+
+        # @return [String] file_path
+        def build_path(path:, dir:, response:)
           body = response.body
           mtime = response.headers.key?("Last-Modified") ?
             Time.httpdate(response.headers["Last-Modified"]) : Time.now
@@ -75,10 +125,16 @@ module Sinatra
           file_path = Pathname( File.join dir, path )
           file_path = file_path.join( 'index.html' ) unless  path.match(pattern)
           ::FileUtils.mkdir_p( file_path.dirname )
-          ::File.open(file_path, 'w+') do |f|
-            f.write(body)
-          end
+          write_path content: body, path: file_path
           ::FileUtils.touch(file_path, :mtime => mtime)
+          file_path
+        end
+
+
+        def write_path content:, path:
+          ::File.open(path, 'w+') do |f|
+            f.write(content)
+          end
         end
 
 
