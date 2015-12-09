@@ -17,11 +17,13 @@ module Sinatra
 
     module ClassMethods
       # @example
-      #   app.export paths: "/" do |body|
-      #     # something here
+      #   app.export paths: "/" do |builder|
+      #     if builder.last_response.body.include? "/echo-1"
+      #       builder.paths << "/echo-1"
+      #     end
       #   end
       def export! paths: nil, skips: [], &block
-        Builder.new(self,paths: paths, skips: skips).build! &block
+        @builder ||= Builder.new(self,paths: paths, skips: skips).build! &block
       end
     end
 
@@ -32,11 +34,23 @@ module Sinatra
         include Term::ANSIColor
       end
 
-      def initialize(app, paths: nil, skips: nil )
+      # paths | use_routes |
+      #   f          t        t
+      #   t         t         t
+      #   t         f/nil     f
+      #   f         f/nil     f
+      def initialize(app, paths: nil, skips: nil, use_routes: nil )
         @app = app
-        @paths = paths
+        @use_routes = 
+          paths.nil? && use_routes.nil? ?
+            true :
+            use_routes
+        @paths = paths || []
         @skips = skips || []
+        @enum = []
       end
+
+      attr_accessor :paths, :skips, :last_response, :last_path
 
       def app
         @app
@@ -47,24 +61,23 @@ module Sinatra
         dir = Pathname( ENV["EXPORT_BUILD_DIR"] || app.public_folder )
         handle_error_dir_not_found!(dir) unless dir.exist? && dir.directory?
 
-
-        if @paths.nil?
-          paths_e = self.send( :route_paths ).to_enum
-        else
-          paths_e = @paths.to_enum
+        if @use_routes
+          @enum.push self.send( :route_paths ).to_enum
         end
+        @enum.push @paths.to_enum    
 
         catch(:no_more_paths) {
+          enum = get_enum
           while true
             begin
-              path = paths_e.next
-              # TODO handle named captures paths
-              unless @skips.include? path
-                response = get_path(path)
-                file_path = build_path(path: path, dir: dir, response: response)
-                block.call response, path if block
-              end
+              last_path = enum.next
+              next if last_path =~ /((:\w+)|\*)/ # keys and splats
+              next if @skips.include? last_path
+              @last_response = get_path(last_path)
+              file_path = build_path(path: last_path, dir: dir, response: last_response)
+              block.call self if block
             rescue StopIteration
+              retry if enum = get_enum
               throw(:no_more_paths)
             end
           end
@@ -72,6 +85,10 @@ module Sinatra
       end
 
       private
+
+        def get_enum
+          @enum.shift
+        end
 
 
         def route_paths
