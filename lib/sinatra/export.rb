@@ -93,6 +93,7 @@ module Sinatra
 
       private
 
+        # @return [Enumerator] The next enumerator to provide paths for the builder.
         def get_enum
           @enum.shift
         end
