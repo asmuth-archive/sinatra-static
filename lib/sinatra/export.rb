@@ -81,6 +81,7 @@ module Sinatra
               last_path = enum.next
               next unless route_path_usable?(last_path)
               next if @skips.include? last_path
+              last_path = last_path.chop if last_path.end_with? "?"
               @last_response = get_path(last_path)
               file_path = build_path(path: last_path, dir: dir, response: last_response)
               block.call self if block
@@ -99,9 +100,10 @@ module Sinatra
         # @param [String,Regexp] path
         # @return [TrueClass] Whether the path is a straightforward path (i.e. usable) or it's a regex or path with named captures / wildcards (i.e. unusable).
         def route_path_usable? path
-          res = path.respond_to?( :~ ) || # skip regex
-                path =~ /(?:\:\w+)|\*/ || # keys and splats
-                path =~ /[\?\%\\]/ # special chars
+          res = path.respond_to?( :~ )  ||  # skip regex
+                path =~ /(?:\:\w+)|\*/  ||  # keys and splats
+                path =~ /[\%\\]/        ||  # special chars
+                path[0..-2].include?("?") # an ending ? is acceptable, it'll be chomped
           !res
         end
 
@@ -156,7 +158,7 @@ module Sinatra
         end
 
 
-        def get_path( path)
+        def get_path path
           get(path).tap do |resp|
             handle_error_non_200!(path) unless resp.status == 200
           end
