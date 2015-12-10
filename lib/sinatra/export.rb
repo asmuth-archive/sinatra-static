@@ -79,7 +79,7 @@ module Sinatra
           while true
             begin
               last_path = enum.next
-              next if last_path =~ /((:\w+)|\*)/ # keys and splats
+              next unless route_path_usable?(last_path)
               next if @skips.include? last_path
               @last_response = get_path(last_path)
               file_path = build_path(path: last_path, dir: dir, response: last_response)
@@ -94,6 +94,16 @@ module Sinatra
 
       private
 
+        # A convenience method to keep this logic together
+        # and reusable
+        # @param [String,Regexp] path
+        # @return [TrueClass] Whether the path is a straightforward path (i.e. usable) or it's a regex or path with named captures / wildcards (i.e. unusable).
+        def route_path_usable? path
+          res = path.respond_to?( :~ ) || # skip regex
+                path =~ /((:\w+)|\*)/ # keys and splats
+          !res
+        end
+
         # @return [Enumerator] The next enumerator to provide paths for the builder.
         def get_enum
           @enum.shift
@@ -103,7 +113,8 @@ module Sinatra
         def route_paths
           route_paths = []
           app.each_route do |route|
-            next if route.verb != 'GET' or not route.path.respond_to? :to_s
+            next if route.verb != 'GET'
+            next unless route_path_usable?(route.path)
             route_paths << route.path
           end
           route_paths
