@@ -100,7 +100,8 @@ module Sinatra
         # @return [TrueClass] Whether the path is a straightforward path (i.e. usable) or it's a regex or path with named captures / wildcards (i.e. unusable).
         def route_path_usable? path
           res = path.respond_to?( :~ ) || # skip regex
-                path =~ /((:\w+)|\*)/ # keys and splats
+                path =~ /(?:\:\w+)|\*/ || # keys and splats
+                path =~ /[\?\%\\]/ # special chars
           !res
         end
 
