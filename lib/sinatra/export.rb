@@ -52,13 +52,14 @@ module Sinatra
           paths.nil? && use_routes.nil? ?
             true :
             use_routes
-        @paths = paths || []
-        @skips = skips || []
-        @enum = []
-        @filters = filters
+        @paths  = paths || []
+        @skips  = skips || []
+        @enum   = []
+        @filters  = filters
+        @visited  = []
       end
 
-      attr_accessor :paths, :skips, :last_response, :last_path
+      attr_accessor :paths, :skips, :last_response, :last_path, :visited
 
       def app
         @app
@@ -85,12 +86,14 @@ module Sinatra
               @last_response = get_path(last_path)
               file_path = build_path(path: last_path, dir: dir, response: last_response)
               block.call self if block
+              @visited |= [last_path]
             rescue StopIteration
               retry if enum = get_enum
               throw(:no_more_paths)
             end
           end
         }
+        self
       end
 
       private
