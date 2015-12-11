@@ -43,8 +43,8 @@ module Sinatra
 
 
       # @param [Sinatra::Base] app The Sinatra app
-      # @param [Array] paths Paths that will be requested by the builder.
-      # @param [Array] skips: Paths that will be ignored by the builder.
+      # @param [Array<String>,Array<URI>] paths Paths that will be requested by the builder.
+      # @param [Array<String>] skips: Paths that will be ignored by the builder.
       # @param [TrueClass] use_routes Whether to use Sinatra AdvancedRoutes to look for paths to send to the builder.
       def initialize(app, paths: nil, skips: nil, use_routes: nil, filters: [] )
         @app = app
@@ -80,6 +80,9 @@ module Sinatra
           while true
             begin
               last_path, status = enum.next
+              last_path = last_path.respond_to?(:path) ?
+                            last_path.path :
+                            last_path.to_s
               next unless route_path_usable?(last_path)
               next if @skips.include? last_path
               last_path = last_path.chop if last_path.end_with? "?"
