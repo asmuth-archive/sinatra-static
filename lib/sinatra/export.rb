@@ -173,7 +173,7 @@ module Sinatra
           handle_error!("can't find output directory: #{dir.to_s}")
         end
 
-        def handle_error_incorrect_status!(status)
+        def handle_error_incorrect_status!(path,status)
           handle_error!("GET #{path} returned non-#{status} status code...")
         end
 
