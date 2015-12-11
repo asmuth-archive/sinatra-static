@@ -35,6 +35,10 @@ describe "Sinatra Export" do
         get "/echo-:this" do |this|
           this.to_s
         end
+
+        not_found do
+          'This is nowhere to be found.'
+        end
       end
     end
   end
@@ -94,7 +98,7 @@ describe "Sinatra Export" do
     describe "Given paths" do
       before :all do
         FileUtils.mkdir_p File.join(__dir__, "support/fixtures", "app/public")
-        app.export! paths: ["/", "/contact"]
+        app.export! paths: ["/", "/contact", ["/404.html", 404]]
       end
 
       after :all do
@@ -124,6 +128,13 @@ describe "Sinatra Export" do
           File.join(app.public_folder, 'yesterday/index.html')
         }
         it { File.exist?(subject).should be_falsy }
+      end
+
+      context "404" do
+        subject {
+          File.join(app.public_folder, '404.html')
+        }
+        it { File.read(subject).should include 'This is nowhere to be found.' }
       end
     end
     

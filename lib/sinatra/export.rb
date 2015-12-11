@@ -79,11 +79,11 @@ module Sinatra
           enum = get_enum
           while true
             begin
-              last_path = enum.next
+              last_path, status = enum.next
               next unless route_path_usable?(last_path)
               next if @skips.include? last_path
               last_path = last_path.chop if last_path.end_with? "?"
-              @last_response = get_path(last_path)
+              @last_response = get_path(last_path, status)
               file_path = build_path(path: last_path, dir: dir, response: last_response)
               block.call self if block
               @visited |= [last_path]
@@ -161,9 +161,10 @@ module Sinatra
         end
 
 
-        def get_path path
+        def get_path path, status=nil
+          status ||= 200
           get(path).tap do |resp|
-            handle_error_non_200!(path) unless resp.status == 200
+            handle_error_incorrect_status!(path,status) unless resp.status == status
           end
         end
 
@@ -172,8 +173,8 @@ module Sinatra
           handle_error!("can't find output directory: #{dir.to_s}")
         end
 
-        def handle_error_non_200!(path)
-          handle_error!("GET #{path} returned non-200 status code...")
+        def handle_error_incorrect_status!(status)
+          handle_error!("GET #{path} returned non-#{status} status code...")
         end
 
         def handle_error!(desc)
