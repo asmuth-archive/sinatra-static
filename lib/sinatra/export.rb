@@ -54,7 +54,7 @@ module Sinatra
             use_routes
         @paths  = paths || []
         @skips  = skips || []
-        @enum   = []
+        @enums  = []
         @filters  = filters
         @visited  = []
       end
@@ -71,27 +71,27 @@ module Sinatra
         handle_error_dir_not_found!(dir) unless dir.exist? && dir.directory?
 
         if @use_routes
-          @enum.push self.send( :route_paths ).to_enum
+          @enums.push self.send( :route_paths ).to_enum
         end
-        @enum.push @paths.to_enum    
+        @enums.push @paths.to_enum
 
         catch(:no_more_paths) {
-          enum = get_enum
+          enum = @enums.shift
           while true
             begin
-              last_path, status = enum.next
-              last_path = last_path.respond_to?(:path) ?
-                            last_path.path :
-                            last_path.to_s
-              next unless route_path_usable?(last_path)
-              next if @skips.include? last_path
-              last_path = last_path.chop if last_path.end_with? "?"
-              @last_response = get_path(last_path, status)
-              file_path = build_path(path: last_path, dir: dir, response: last_response)
+              @last_path, status = enum.next
+              @last_path = @last_path.respond_to?(:path) ?
+                            @last_path.path :
+                            @last_path.to_s
+              next unless route_path_usable?(@last_path)
+              next if @skips.include? @last_path
+              @last_path = @last_path.chop if @last_path.end_with? "?"
+              @last_response = get_path(@last_path, status)
+              file_path = build_path(path: @last_path, dir: dir, response: last_response)
               block.call self if block
-              @visited |= [last_path]
+              @visited |= [@last_path]
             rescue StopIteration
-              retry if enum = get_enum
+              retry if enum = @enums.shift
               throw(:no_more_paths)
             end
           end
@@ -111,11 +111,6 @@ module Sinatra
                 path =~ /[\%\\]/        ||  # special chars
                 path[0..-2].include?("?") # an ending ? is acceptable, it'll be chomped
           !res
-        end
-
-        # @return [Enumerator] The next enumerator to provide paths for the builder.
-        def get_enum
-          @enum.shift
         end
 
 
