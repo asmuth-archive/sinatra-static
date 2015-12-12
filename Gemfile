@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 group :development do
   gem "term-ansicolor"
   gem "pry-byebug"
+  gem "pry-stack_explorer"
 end
 
 group :test do
