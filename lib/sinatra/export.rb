@@ -37,6 +37,10 @@ module Sinatra
     class Builder
       include Rack::Test::Methods
 
+      DEFAULT_ERROR_HANDLER = ->(desc) {
+        puts ColorString.new("failed: #{desc}").red;
+      }
+
       class ColorString < String
         include Term::ANSIColor
       end
@@ -57,9 +61,11 @@ module Sinatra
         @enums  = []
         @filters  = filters
         @visited  = []
+        @errored  = []
+        @error_handler = DEFAULT_ERROR_HANDLER
       end
 
-      attr_accessor :paths, :skips, :last_response, :last_path, :visited
+      attr_accessor :paths, :skips, :last_response, :last_path, :visited, :errored
 
       def app
         @app
@@ -86,10 +92,14 @@ module Sinatra
               next unless route_path_usable?(@last_path)
               next if @skips.include? @last_path
               @last_path = @last_path.chop if @last_path.end_with? "?"
-              @last_response = get_path(@last_path, status)
-              file_path = build_path(path: @last_path, dir: dir, response: last_response)
-              block.call self if block
-              @visited |= [@last_path]
+              desc = catch(:status_error) {
+                @last_response = get_path(@last_path, status)
+                file_path = build_path(path: @last_path, dir: dir, response: last_response)
+                block.call self if block
+              }
+              desc ?
+                @errored |= [@last_path] :
+                @visited |= [@last_path]
             rescue StopIteration
               retry if enum = @enums.shift
               throw(:no_more_paths)
@@ -100,6 +110,10 @@ module Sinatra
       end
 
       private
+
+        def status_error desc
+          throw :status_error, desc
+        end
 
         # A convenience method to keep this logic together
         # and reusable
@@ -162,22 +176,24 @@ module Sinatra
         def get_path path, status=nil
           status ||= 200
           get(path).tap do |resp|
-            handle_error_incorrect_status!(path,status) unless resp.status == status
+            handle_error_incorrect_status!(path,expected: status, actual: resp.status) unless resp.status == status
           end
         end
 
 
         def handle_error_dir_not_found!(dir)
-          handle_error!("can't find output directory: #{dir.to_s}")
+          @error_handler.call("can't find output directory: #{dir.to_s}")
         end
 
-        def handle_error_incorrect_status!(path,status)
-          handle_error!("GET #{path} returned non-#{status} status code...")
+        def handle_error_incorrect_status!(path,expected:,actual:)
+          desc = "GET #{path} returned #{actual} status code instead of #{expected}"
+          @error_handler.call(desc)
+          status_error desc
         end
 
-        def handle_error!(desc)
-          puts ColorString.new("failed: #{desc}").red; exit!
-        end
+#         def handle_error!(desc)
+#           puts ColorString.new("failed: #{desc}").red; exit!
+#         end
     end
   end
 

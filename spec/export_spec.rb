@@ -39,6 +39,10 @@ describe "Sinatra Export" do
         not_found do
           'This is nowhere to be found.'
         end
+
+        get "/this-will-send-non-200/*" do
+          halt 401, "No thanks!" 
+        end
       end
     end
   end
@@ -93,6 +97,22 @@ describe "Sinatra Export" do
         subject { @builder.visited }
         it { should =~ ["/", "/contact/", "/data.json", "/yesterday"] }
       end
+
+      describe "Raising errors" do
+        before :all do
+          FileUtils.mkdir_p File.join(__dir__, "support/fixtures", "app/public")
+        end
+
+        context "this-will-send-non-200/for-sure" do
+          subject { @builder = app.export! paths: ["/this-will-send-non-200/for-sure"] }
+          its(:errored) { should =~ ["/this-will-send-non-200/for-sure"] }
+        end
+
+        after :all do
+          FileUtils.rm_rf File.join(__dir__, "support/fixtures", "app" )
+        end
+      
+      end 
     end
 
     describe "Given paths" do
