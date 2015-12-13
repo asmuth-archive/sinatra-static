@@ -104,8 +104,17 @@ describe "Sinatra Export" do
         end
 
         context "this-will-send-non-200/for-sure" do
-          subject { @builder = app.export! paths: ["/this-will-send-non-200/for-sure"] }
-          its(:errored) { should =~ ["/this-will-send-non-200/for-sure"] }
+          context "Using the default error handler" do
+            subject { @builder = app.export! paths: ["/this-will-send-non-200/for-sure"] }
+            its(:errored) { should =~ ["/this-will-send-non-200/for-sure"] }
+          end
+          context "Supplying an error handler" do
+            it "should raise error" do
+              expect {
+                @builder = app.export! paths: ["/this-will-send-non-200/for-sure"], error_handler: ->(desc){ fail "Please stop" }
+              }.to raise_error
+            end
+          end
         end
 
         after :all do

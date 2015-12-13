@@ -50,7 +50,7 @@ module Sinatra
       # @param [Array<String>,Array<URI>] paths Paths that will be requested by the builder.
       # @param [Array<String>] skips: Paths that will be ignored by the builder.
       # @param [TrueClass] use_routes Whether to use Sinatra AdvancedRoutes to look for paths to send to the builder.
-      def initialize(app, paths: nil, skips: nil, use_routes: nil, filters: [] )
+      def initialize(app, paths: nil, skips: nil, use_routes: nil, filters: [], error_handler: nil )
         @app = app
         @use_routes = 
           paths.nil? && use_routes.nil? ?
@@ -65,7 +65,7 @@ module Sinatra
         @error_handler = DEFAULT_ERROR_HANDLER
       end
 
-      attr_accessor :paths, :skips, :last_response, :last_path, :visited, :errored
+      attr_accessor :paths, :skips, :last_response, :last_path, :visited, :errored, :error_handler
 
       def app
         @app
