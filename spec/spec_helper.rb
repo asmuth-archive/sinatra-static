@@ -34,6 +34,6 @@ end
 
 RSpec.configure do |config|
   config.include Rack::Test::Methods
-  config.expect_with(:rspec) { |c| c.syntax = :should }
+  config.expect_with(:rspec) { |c| c.syntax = [ :should , :expect ] }
 end
 
