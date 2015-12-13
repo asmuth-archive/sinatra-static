@@ -255,7 +255,7 @@ describe "Sinatra Export" do
     context "Given a builder" do
       before :all do
         FileUtils.mkdir_p File.join(__dir__, "support/fixtures", "app/public")
-        app.builder = Sinatra::Export::Builder.new(self,paths: ["/", "/contact"])
+        app.builder = Sinatra::Export::Builder.new(app,paths: ["/", "/contact"])
         app.export!
       end
 
