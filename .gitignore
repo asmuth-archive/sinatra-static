@@ -6,3 +6,5 @@ vendor/
 vendor.noindex/
 coverage/
 Gemfile.lock
+doc/
+.yardoc/
