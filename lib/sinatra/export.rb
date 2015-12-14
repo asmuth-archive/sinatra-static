@@ -17,26 +17,62 @@ module Sinatra
     end
 
     module ClassMethods
+
       # @example
-      #   app.export paths: "/" do |builder|
+      #   # The default: Will use the paths from Sinatra Namespace
+      #   app.export!
+      #
+      #   # Skip a path
+      #   app.export! skips: ["/admin"]
+      #
+      #   # Only visit the homepage and the site map
+      #   app.export! paths: ["/", "/site-map"]
+      #
+      #   # Visit the 404 error page by supplying the expected
+      #   # status code (so as not to trigger an error)
+      #   app.export! paths: ["/", ["/404.html",404]]
+      #
+      #   # Filter out mentions of localhost:4567
+      #   filter = ->(content){ content.gsub("localhost:4567, "example.org") }
+      #   app.export! filters: [filter]
+      #
+      #   # Use routes found by Sinatra AdvancedRoutes *and*
+      #   # ones supplied via `paths`
+      #   app.export! paths: ["/crazy/deep/page/path"], use_routes: true
+      #
+      #   # Supply a path and scan the output for an internal link
+      #   # adding it to the list of paths to be visited
+      #   app.export! paths: "/" do |builder|
       #     if builder.last_response.body.include? "/echo-1"
       #       builder.paths << "/echo-1"
       #     end
       #   end
+      #
+      # @param [Array<String>,Array<URI>] paths Paths that will be requested by the exporter.
+      # @param [Array<String>] skips: Paths that will be ignored by the exporter.
+      # @param [TrueClass] use_routes Whether to use Sinatra AdvancedRoutes to look for paths to send to the builder.
+      # @param [Array<#call>] filters Filters will be applied to every file as it is written in the order given.
+      # @param [#call] error_handler Define your own error handling. Takes one argument, a description of the error.
+      # @yield [builder] Gives a Builder instance to the block (see Builder) that is called for every path visited.
+      # @note By default the output files with be written to the public folder. Set the EXPORT_BUILD_DIR env var to choose a different location.
       def export! paths: nil, skips: [], filters: [], use_routes: nil, error_handler: nil,  &block
         @builder ||= 
           if self.builder
             self.builder
           else
-            Builder.new(self,paths: paths, skips: skips, filters: filters, use_routes: use_routes, error_handler: error_handler )
+            Builder.new(self, paths: paths, skips: skips, filters: filters, use_routes: use_routes, error_handler: error_handler )
           end
         @builder.build! &block
       end
     end
 
+
+    # Visits the paths and builds pages from the output
     class Builder
       include Rack::Test::Methods
 
+      # Default error handler
+      # @yieldparam [String] desc Description of the error.
       DEFAULT_ERROR_HANDLER = ->(desc) {
         puts ColorString.new("failed: #{desc}").red;
       }
@@ -47,9 +83,8 @@ module Sinatra
 
 
       # @param [Sinatra::Base] app The Sinatra app
-      # @param [Array<String>,Array<URI>] paths Paths that will be requested by the builder.
-      # @param [Array<String>] skips: Paths that will be ignored by the builder.
-      # @param [TrueClass] use_routes Whether to use Sinatra AdvancedRoutes to look for paths to send to the builder.
+      # @param (see ClassMethods#export!)
+      # @yield [builder] Gives a Builder instance to the block (see Builder) that is called for every path visited.
       def initialize(app, paths: nil, skips: nil, use_routes: nil, filters: [], error_handler: nil )
         @app = app
         @use_routes = 
@@ -62,16 +97,48 @@ module Sinatra
         @filters  = filters
         @visited  = []
         @errored  = []
-        @error_handler = DEFAULT_ERROR_HANDLER
+        @error_handler = error_handler || DEFAULT_ERROR_HANDLER
       end
 
-      attr_accessor :paths, :skips, :last_response, :last_path, :visited, :errored, :error_handler
+      # @!attribute [r] last_response
+      #   @return [Rack::Response] The last page requested's response
+      attr_reader :last_response
+
+      # @!attribute [r] last_path
+      #   @return [String] The last path requested
+      attr_reader :last_path
+
+      # @!attribute [r] visited
+      #   @return [Array<String>] List of paths visited by the builder
+      attr_reader :visited
+
+      # @!attribute [r] errored
+      #   @return [Array<String>] List of paths visited by the builder that called the error handler
+      attr_reader :errored
+
+      # @!attribute [w] error_handler
+      # Error handler (see ClassMethods#export!)
+      #   @return [nil]
+      attr_writer :error_handler
+
+      # @!attribute paths
+      # Paths to visit (see ClassMethods#export!)
+      #   @return [Array<String,URI>]
+      attr_accessor :paths
+
+      # @!attribute skips
+      # Paths to be skipped (see ClassMethods#export!)
+      #   @return [Array<String,URI>]
+      attr_accessor :skips
+
 
       def app
         @app
       end
 
 
+      # Processes the routes and builds the output files.
+      # @yield [builder] Gives a Builder instance to the block (see Builder) that is called for every path visited.
       def build!( &block )
         dir = Pathname( ENV["EXPORT_BUILD_DIR"] || app.public_folder )
         handle_error_dir_not_found!(dir) unless dir.exist? && dir.directory?
@@ -111,6 +178,7 @@ module Sinatra
 
       private
 
+        # a convenience wrapper for throwing status errors
         def status_error desc
           throw :status_error, desc
         end
@@ -190,10 +258,6 @@ module Sinatra
           @error_handler.call(desc)
           status_error desc
         end
-
-#         def handle_error!(desc)
-#           puts ColorString.new("failed: #{desc}").red; exit!
-#         end
     end
   end
 
