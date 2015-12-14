@@ -28,7 +28,7 @@ module Sinatra
           if self.builder
             self.builder
           else
-            Builder.new(self,paths: paths, skips: skips, filters: filters )
+            Builder.new(self,paths: paths, skips: skips, filters: filters, use_routes: use_routes )
           end
         @builder.build! &block
       end
