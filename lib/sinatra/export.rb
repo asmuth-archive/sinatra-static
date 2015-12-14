@@ -5,8 +5,11 @@ require 'term/ansicolor'
 require 'pathname'
 
 module Sinatra
+
+  # Export a Sinatra app to static files!
   module Export
 
+    # required for all Sinatra Extensions, see http://www.sinatrarb.com/extensions.html
     def self.registered(app)
       if app.extensions.nil? or !app.extensions.include?(Sinatra::AdvancedRoutes)
         app.register Sinatra::AdvancedRoutes
@@ -16,13 +19,15 @@ module Sinatra
       app.set :builder, nil
     end
 
+    # These will get extended onto the Sinatra app
     module ClassMethods
 
+      # The entry method. Run this to export the app to files.
       # @example
       #   # The default: Will use the paths from Sinatra Namespace
       #   app.export!
       #
-      #   # Skip a path
+      #   # Skip a path (or paths)
       #   app.export! skips: ["/admin"]
       #
       #   # Only visit the homepage and the site map
@@ -101,7 +106,7 @@ module Sinatra
       end
 
       # @!attribute [r] last_response
-      #   @return [Rack::Response] The last page requested's response
+      #   @return [Rack::MockResponse] The last page requested's response
       attr_reader :last_response
 
       # @!attribute [r] last_path
@@ -211,6 +216,11 @@ module Sinatra
         end
 
 
+        # Builds the output dirs and file
+        # based on the response.
+        # @param [String] path
+        # @param [Pathname,String] dir
+        # @param [Rack::MockResponse] response
         # @return [String] file_path
         def build_path(path:, dir:, response:)
           body = response.body
@@ -233,6 +243,10 @@ module Sinatra
         end
 
 
+        # Write the response to file.
+        # Uses whatever filters were set, on the content.
+        # @param [String] content
+        # @param [Pathname,String] path
         def write_path content:, path:
           if @filters && !@filters.empty?
             content = @filters.inject(content) do |current_content,filter|
@@ -245,6 +259,10 @@ module Sinatra
         end
 
 
+        # Wrapper around Rack::Test's `get`
+        # @param [String] path
+        # @param [Integer] status The expected response status code. Anything different and the error handler is called. Defaults to 200.
+        # @return [Rack::MockResponse]
         def get_path path, status=nil
           status ||= 200
           get(path).tap do |resp|
@@ -257,6 +275,11 @@ module Sinatra
           @error_handler.call("can't find output directory: #{dir.to_s}")
         end
 
+
+        # Handles the error caused by a mismatch in status code expectations.
+        # @param [String] path The route path.
+        # @param [#to_s] expected The status code that was expected.
+        # @param [#to_s] actual The actual status code received.
         def handle_error_incorrect_status!(path,expected:,actual:)
           desc = "GET #{path} returned #{actual} status code instead of #{expected}"
           @error_handler.call(desc)
