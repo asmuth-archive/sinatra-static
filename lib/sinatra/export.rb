@@ -139,6 +139,7 @@ module Sinatra
 
       # Processes the routes and builds the output files.
       # @yield [builder] Gives a Builder instance to the block (see Builder) that is called for every path visited.
+      # @return [self]
       def build!( &block )
         dir = Pathname( ENV["EXPORT_BUILD_DIR"] || app.public_folder )
         handle_error_dir_not_found!(dir) unless dir.exist? && dir.directory?
