@@ -23,12 +23,12 @@ module Sinatra
       #       builder.paths << "/echo-1"
       #     end
       #   end
-      def export! paths: nil, skips: [], filters: [], &block
+      def export! paths: nil, skips: [], filters: [], use_routes: nil, error_handler: nil,  &block
         @builder ||= 
           if self.builder
             self.builder
           else
-            Builder.new(self,paths: paths, skips: skips, filters: filters, use_routes: use_routes )
+            Builder.new(self,paths: paths, skips: skips, filters: filters, use_routes: use_routes, error_handler: error_handler )
           end
         @builder.build! &block
       end
