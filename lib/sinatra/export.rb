@@ -197,6 +197,9 @@ module Sinatra
         end
 
 
+        # Wrapper around Sinatra::AdvancedRoutes#each_route
+        # to filter what comes through.
+        # @return [Array<String>]
         def route_paths
           route_paths = []
           app.each_route do |route|
