@@ -171,6 +171,18 @@ You'd probably want to check the links weren't external too.
 
 There's other stuff you could do in that block, the builder gives you access to `paths`, `skips` (both read/write); `visited` (a list of the paths visited so far), `errored` (a list of the paths that have called the error handler), the `last_path` (which inside the block will be the current path) and the `last_response`, so you can access things like the `last_response.status` and `last_response.body`.
 
+Another example, filtering while processing:
+
+````ruby
+Sinatra::Application.export! do |builder|
+  # set it using an array because Rack::Response#body is actually
+  # an array that is joined to output a string
+  builder.last_response.body = [builder.last_response.body.upcase!]
+end
+```
+
+Now all the output would be upcased. There is more on filtering below, but as you can see, you can process things on the fly.
+
 ### Filtering ###
 
 If you want to apply a filter to every path that is written then you can supply those via the `filters` keyword:

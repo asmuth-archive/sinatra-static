@@ -164,8 +164,9 @@ module Sinatra
               @last_path = @last_path.chop if @last_path.end_with? "?"
               desc = catch(:status_error) {
                 @last_response = get_path(@last_path, status)
-                file_path = build_path(path: @last_path, dir: dir, response: last_response)
                 block.call self if block
+                file_path = build_path(path: @last_path, dir: dir, response: last_response)
+                nil
               }
               desc ?
                 @errored |= [@last_path] :

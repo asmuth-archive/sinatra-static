@@ -205,50 +205,90 @@ describe "Sinatra Export" do
     end
 
     context "Using a block" do
-      before :all do
-        FileUtils.mkdir_p File.join(__dir__, "support/fixtures", "app/public")
-        app.export! do |builder|
-          if builder.last_response.body.include? "/echo-1"
-            builder.paths << "/echo-1"
+      context "To add a path" do
+        before :all do
+          FileUtils.mkdir_p File.join(__dir__, "support/fixtures", "app/public")
+          app.export! do |builder|
+            if builder.last_response.body.include? "/echo-1"
+              builder.paths << "/echo-1"
+            end
           end
+        end
+
+        after :all do
+          FileUtils.rm_rf File.join(__dir__, "support/fixtures", "app" )
+        end
+
+        context "index" do
+          subject {
+            File.join(app.public_folder, 'index.html')
+          }
+          it { File.read(subject).should include 'homepage' }
+        end
+        context "contact" do
+          subject {
+            File.join(app.public_folder, 'contact/index.html')
+          }
+          it { File.read(subject).should include 'contact' }
+        end
+        context "data.json" do
+          subject {
+            File.join(app.public_folder, 'data.json')
+          }
+          it { File.read(subject).should include "{test: 'ok'}" }
+        end
+        context "yesterday" do
+          subject {
+            File.new File.join(app.public_folder, 'yesterday/index.html')
+          }
+          it { subject.read.should include 'old content' }
+          its(:mtime) { should == Time.local(2002, 10, 31) }
+        end
+
+        context "named parameters" do
+          subject {
+            File.join(app.public_folder, 'echo-1/index.html')
+          }
+          it { File.read(subject).should include '1' }
         end
       end
 
-      after :all do
-        FileUtils.rm_rf File.join(__dir__, "support/fixtures", "app" )
-      end
+      context "To filter output" do
+        before :all do
+          FileUtils.mkdir_p File.join(__dir__, "support/fixtures", "app/public")
+          app.export! do |builder|
+            builder.last_response.body = [builder.last_response.body.upcase!]
+          end
+        end
 
-      context "index" do
-        subject {
-          File.join(app.public_folder, 'index.html')
-        }
-        it { File.read(subject).should include 'homepage' }
-      end
-      context "contact" do
-        subject {
-          File.join(app.public_folder, 'contact/index.html')
-        }
-        it { File.read(subject).should include 'contact' }
-      end
-      context "data.json" do
-        subject {
-          File.join(app.public_folder, 'data.json')
-        }
-        it { File.read(subject).should include "{test: 'ok'}" }
-      end
-      context "yesterday" do
-        subject {
-          File.new File.join(app.public_folder, 'yesterday/index.html')
-        }
-        it { subject.read.should include 'old content' }
-        its(:mtime) { should == Time.local(2002, 10, 31) }
-      end
-
-      context "named parameters" do
-        subject {
-          File.join(app.public_folder, 'echo-1/index.html')
-        }
-        it { File.read(subject).should include '1' }
+        after :all do
+          FileUtils.rm_rf File.join(__dir__, "support/fixtures", "app" )
+        end
+        context "index" do
+          subject {
+            File.join(app.public_folder, 'index.html')
+          }
+          it { File.read(subject).should include 'HOMEPAGE' }
+        end
+        context "contact" do
+          subject {
+            File.join(app.public_folder, 'contact/index.html')
+          }
+          it { File.read(subject).should include 'CONTACT' }
+        end
+        context "data.json" do
+          subject {
+            File.join(app.public_folder, 'data.json')
+          }
+          it { File.read(subject).should include "{TEST: 'OK'}" }
+        end
+        context "yesterday" do
+          subject {
+            File.new File.join(app.public_folder, 'yesterday/index.html')
+          }
+          it { subject.read.should include 'OLD CONTENT' }
+          its(:mtime) { should == Time.local(2002, 10, 31) }
+        end
       end
     end
 
