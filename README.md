@@ -144,7 +144,7 @@ All that's needed is something that responds to `call` - so a proc, block or lam
 
 ### Supplying a process block ###
 
-`export!` can take a block that will be run for every page that is processed. Inside the block, and instance of the `Builder` class (the one that does all the work, see the API docs for more) will be accessible. For example, let's add a path during the processing:
+`export!` can take a block that will be run for every page that is processed. Inside the block, and instance of the `Builder` class (the one that does all the work, see the API docs via `rake yard` for more) will be accessible. For example, let's add a path during the processing:
 
 ````ruby
 get '/this-route-has-an-internal-link' do
