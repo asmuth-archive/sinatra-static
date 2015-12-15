@@ -182,6 +182,11 @@ Sinatra::Application.export! filters: [->(text){ text.upcase }]
 
 That would upcase everything. If you wanted you could do things like remove mentions of "localhost" or whatever.
 
+````ruby
+require 'hpricot' # nokogiri is available too
+Sinatra::Application.export! filters: [->(text){ text.gsub("localhost", "example.org" }, ->(text){ text.gsub("http://", "https://" }]
+```
+
 `filter` takes an array, each item should respond to `call` and take 1 argument, the text to be filtered. Each filter will be applied in the order of the array.
 
 ## Other resources
