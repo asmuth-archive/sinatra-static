@@ -92,10 +92,7 @@ module Sinatra
       # @yield [builder] Gives a Builder instance to the block (see Builder) that is called for every path visited.
       def initialize(app, paths: nil, skips: nil, use_routes: nil, filters: [], error_handler: nil )
         @app = app
-        @use_routes = 
-          paths.nil? && use_routes.nil? ?
-            true :
-            use_routes
+        @use_routes = paths.nil? && use_routes.nil? ? true : use_routes
         @paths  = paths || []
         @skips  = skips || []
         @enums  = []
