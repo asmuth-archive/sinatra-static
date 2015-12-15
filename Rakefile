@@ -1,6 +1,5 @@
-desc "Runs tests"
-task :test do
-  Dir['test/*_test.rb'].each { |f| load f }
-end
+require 'rspec/core/rake_task'
 
-task :default => :test
+RSpec::Core::RakeTask.new(:spec)
+
+task :default => :spec
