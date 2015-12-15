@@ -142,12 +142,12 @@ module Sinatra
       # Processes the routes and builds the output files.
       # @yield [builder] Gives a Builder instance to the block (see Builder) that is called for every path visited.
       # @return [self]
-      def build!( &block )
+      def build!(&block)
         dir = Pathname( ENV["EXPORT_BUILD_DIR"] || app.public_folder )
         handle_error_dir_not_found!(dir) unless dir.exist? && dir.directory?
 
         if @use_routes
-          @enums.push self.send( :route_paths ).to_enum
+          @enums.push self.send(:route_paths).to_enum
         end
         @enums.push @paths.to_enum
 
@@ -260,7 +260,7 @@ module Sinatra
         # @param [String] path
         # @param [Integer] status The expected response status code. Anything different and the error handler is called. Defaults to 200.
         # @return [Rack::MockResponse]
-        def get_path path, status=nil
+        def get_path(path, status=nil)
           status ||= 200
           get(path).tap do |resp|
             handle_error_incorrect_status!(path,expected: status, actual: resp.status) unless resp.status == status
