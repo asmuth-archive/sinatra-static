@@ -151,7 +151,7 @@ module Sinatra
         end
         @enums.push @paths.to_enum
 
-        catch(:no_more_paths) {
+        catch(:no_more_paths) do
           enum = @enums.shift
           while true
             begin
@@ -175,7 +175,7 @@ module Sinatra
               throw(:no_more_paths)
             end
           end
-        }
+        end
         self
       end
 
