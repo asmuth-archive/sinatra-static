@@ -4,7 +4,10 @@ group :development do
   gem "term-ansicolor"
   gem "pry-byebug"
   gem "pry-stack_explorer"
-  gem "yard"
+end
+
+group :development, :test do
+  gem 'yard'
 end
 
 group :test do

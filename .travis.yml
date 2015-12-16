@@ -1,8 +1,8 @@
 language: ruby
 bundler_args: "--without development"
 rvm:
-  - 2.0.0
-  - 2.1.0
+  - 2.0.0-p647
+  - 2.1.7
   - 2.2.3
 # see note about issue at https://docs.travis-ci.com/user/languages/ruby/#Choosing-Ruby-versions-and-implementations-to-test-against
   - rbx-2
