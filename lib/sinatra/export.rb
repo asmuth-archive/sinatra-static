@@ -251,7 +251,12 @@ module Sinatra
         # Uses whatever filters were set, on the content.
         # @param [String] content
         # @param [Pathname,String] path
-        def write_path content:, path:
+        def write_path( content: nil, path: nil )
+          # These argument checks are for Ruby v2.0 as it
+          # doesn't support required keyword args.
+          fail ArgumentError, "'content' is a required argument to write_path" if content.nil?
+          fail ArgumentError, "'path' is a required argument to write_path" if path.nil?
+
           if @filters && !@filters.empty?
             content = @filters.inject(content) do |current_content,filter|
               filter.call current_content
@@ -284,7 +289,12 @@ module Sinatra
         # @param [String] path The route path.
         # @param [#to_s] expected The status code that was expected.
         # @param [#to_s] actual The actual status code received.
-        def handle_error_incorrect_status!(path,expected:,actual:)
+        def handle_error_incorrect_status!(path, expected: nil,actual: nil)
+          # These argument checks are for Ruby v2.0 as it
+          # doesn't support required keyword args.
+          fail ArgumentError, "'expected' is a required argument to handle_error_incorrect_status!" if expected.nil?
+          fail ArgumentError, "'actual' is a required argument to handle_error_incorrect_status!" if actual.nil?
+
           desc = "GET #{path} returned #{actual} status code instead of #{expected}"
           @error_handler.call(desc)
           status_error desc
