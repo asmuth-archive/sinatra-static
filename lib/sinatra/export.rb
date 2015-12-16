@@ -220,7 +220,13 @@ module Sinatra
         # @param [Pathname,String] dir
         # @param [Rack::MockResponse] response
         # @return [String] file_path
-        def build_path(path:, dir:, response:)
+        def build_path(path: nil, dir: nil, response: nil)
+          # These argument checks are for Ruby v2.0 as it
+          # doesn't support required keyword args.
+          fail ArgumentError, "'path' is a required argument to build_path" if path.nil?
+          fail ArgumentError, "'dir' is a required argument to build_path" if dir.nil?
+          fail ArgumentError, "'response' is a required argument to build_path" if response.nil?
+
           body = response.body
           mtime = response.headers.key?("Last-Modified") ?
             Time.httpdate(response.headers["Last-Modified"]) : Time.now
